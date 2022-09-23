@@ -2,12 +2,20 @@
 
 class these {
     private string $idThese;
-    private string $titreThese;
+    private array $titreThese;
+    private array $resumes;
 
     private string $nomAuteur;
     private string $prenomAuteur;
+    
 
     private string $dateSoutance;
+    
+    private array $etablissements_soutenance;
+    private string $discipline;
+    private bool $estSoutenue;
+    private bool $estAccessible;
+    private string $langue;
 
     private array $directeurThese;
     private array $motsCles;
@@ -57,9 +65,9 @@ class these {
     /**
      * @return string
      */
-    public function getTitreThese(): string
+    public function getTitreThese(string $langue): array
     {
-        return $this->titreThese;
+        return $this->titreThese["$langue"];
     }
 
     /**
