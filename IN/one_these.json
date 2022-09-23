@@ -1,0 +1,86 @@
+{
+    "these_sur_travaux": "non",
+    "date_soutenance": "2002-01-01",
+    "directeurs_these": [
+      {
+        "nom": "Pagès",
+        "prenom": "Gilles",
+        "idref": "150727232"
+      }
+    ],
+    "etablissements_soutenance": [
+      {
+        "idref": "026403498",
+        "nom": "Nice"
+      }
+    ],
+    "discipline": {
+      "fr": "Aspect moléculaires et cellulaires de la biologie"
+    },
+    "oai_set_specs": [
+      "ddc:570"
+    ],
+    "president_jury": {},
+    "@version": "1",
+    "iddoc": 712217,
+    "nnt": "2002NICE5774",
+    "ecoles_doctorales": [],
+    "embargo": null,
+    "status": "soutenue",
+    "source": "sudoc",
+    "accessible": "non",
+    "langue": "fr",
+    "@timestamp": "2022-03-01T13:04:48.489Z",
+    "code_etab": "NICE",
+    "cas": "cas5",
+    "titres": {
+      "en": "Inhibiting or stimulating neovascularization : two experimental approaches",
+      "fr": "Inhiber ou favoriser la néovascularisation : deux approches expérimentales"
+    },
+    "resumes": {},
+    "sujets": {},
+    "membres_jury": [],
+    "partenaires_recherche": [],
+    "sujets_rameau": [
+      {
+        "type_vedette": "vedetteRameauGenreForme",
+        "element_entree": {
+          "contenu": null,
+          "idref": null
+        },
+        "subdivisions": []
+      },
+      {
+        "type_vedette": "vedetteRameauNomCommun",
+        "element_entree": {
+          "contenu": "Phosphorylation",
+          "idref": "029540089"
+        },
+        "subdivisions": []
+      },
+      {
+        "type_vedette": "vedetteRameauNomCommun",
+        "element_entree": {
+          "contenu": "Transgénose",
+          "idref": "035315377"
+        },
+        "subdivisions": []
+      },
+      {
+        "type_vedette": "vedetteRameauNomCommun",
+        "element_entree": {
+          "contenu": "Cellules endothéliales",
+          "idref": "061730882"
+        },
+        "subdivisions": []
+      }
+    ],
+    "rapporteurs": [],
+    "auteurs": [
+      {
+        "nom": "Marchetti",
+        "prenom": "Sandrine",
+        "idref": "076453057"
+      }
+    ]
+  }

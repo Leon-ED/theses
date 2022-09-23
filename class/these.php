@@ -1,186 +1,111 @@
 <?php
 
 class these {
-    private string $idThese;
-    private array $titreThese;
-    private array $resumes;
+    private  $idThese;
+    private  $titreThese_fr;
+    private  $titreThese_en;
+    private  $resume_fr;
+    private  $resume_en;
 
-    private string $nomAuteur;
-    private string $prenomAuteur;
+    private  $nomAuteur;
+    private  $prenomAuteur;
     
 
-    private string $dateSoutance;
+    private  $dateSoutance;
     
-    private array $etablissements_soutenance;
-    private string $discipline;
-    private bool $estSoutenue;
-    private bool $estAccessible;
-    private string $langue;
+    private  $etablissements_soutenance;
+    private  $discipline;
+    private  $estSoutenue;
+    private  $estAccessible;
+    private  $langue;
 
-    private array $directeurThese;
-    private array $motsCles;
-    private string $statut;
-    private string $langueThese;
+    private  $directeurThese;
+    private  $motsCles;
+    private  $statut;
+    private  $langueThese;
+
+    private $nnt;
+    private $iddoc;
 
 
 
 
-    public function __construct()
-    {
+    public function __construct(){
 
     }
 
-    /**
-     * @return string
-     */
-    public function getLangueThese(): string
-    {
-        return $this->langueThese;
+    public function setTitre($titre_fr, $titre_en){
+        $this->titreThese_fr = $titre_fr;
+        $this->titreThese_en = $titre_en;
+        return $this;
+    }
+    
+    public function setResume($resume_fr, $resume_en){
+        $this->resume_fr = $resume_fr;
+        $this->resume_en = $resume_en;
+        return $this;
     }
 
-    /**
-     * @param string $langueThese
-     */
-    public function setLangueThese(string $langueThese): void
-    {
-        $this->langueThese = $langueThese;
+    public function setAuteur($nom, $prenom){
+        $this->nomAuteur = $nom;
+        $this->prenomAuteur = $prenom;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdThese(): string
-    {
-        return $this->idThese;
+    public function setDateSoutenance($date){
+        $this->dateSoutance = $date;
+        return $this;
     }
 
-    /**
-     * @param string $idThese
-     */
-    public function setIdThese(string $idThese): void
-    {
-        $this->idThese = $idThese;
+    public function setIddoc($iddoc){
+        $this->iddoc = $iddoc;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitreThese(string $langue): array
-    {
-        return $this->titreThese["$langue"];
+    public function setNnt($nnt){
+        $this->nnt = $nnt;
+        return $this;
     }
 
-    /**
-     * @param string $titreThese
-     */
-    public function setTitreThese(string $titreThese): void
-    {
-        $this->titreThese = $titreThese;
+    public function setLangueThese($langue){
+        $this->langueThese = $langue;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNomAuteur(): string
-    {
-        return $this->nomAuteur;
+    public function setAccessible($accessible){
+        $this->estAccessible = strcmp($accessible, "oui") == 0 ? 1 : 0;
+        return $this;
     }
 
-    /**
-     * @param string $nomAuteur
-     */
-    public function setNomAuteur(string $nomAuteur): void
-    {
-        $this->nomAuteur = $nomAuteur;
+    public function setSoutenue($soutenue){
+        $this->estSoutenue = strcmp($soutenue, "oui") == 0 ? 1 : 0;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPrenomAuteur(): string
-    {
-        return $this->prenomAuteur;
-    }
-
-    /**
-     * @param string $prenomAuteur
-     */
-    public function setPrenomAuteur(string $prenomAuteur): void
-    {
-        $this->prenomAuteur = $prenomAuteur;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDateSoutance(): string
-    {
-        return $this->dateSoutance;
-    }
-
-    /**
-     * @param string $dateSoutance
-     */
-    public function setDateSoutance(string $dateSoutance): void
-    {
-        $this->dateSoutance = $dateSoutance;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDirecteurThese(): array
-    {
-        return $this->directeurThese;
-    }
-
-    /**
-     * @param array $directeurThese
-     */
-    public function setDirecteurThese(array $directeurThese): void
-    {
-        $this->directeurThese = $directeurThese;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMotsCles(): array
-    {
-        return $this->motsCles;
-    }
-
-    /**
-     * @param array $motsCles
-     */
-    public function setMotsCles(array $motsCles): void
-    {
-        $this->motsCles = $motsCles;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatut(): string
-    {
-        return $this->statut;
-    }
-
-    /**
-     * @param string $statut
-     */
-    public function setStatut(string $statut): void
-    {
-        $this->statut = $statut;
+    public function setDiscipline($discipline){
+        $this->discipline = $discipline;
+        return $this;
     }
 
 
 
 
+    
 
 
+    public function insertThese($conn){
+        try{
+        $sql = "INSERT INTO these(titre_fr,titre_en,dateSoutenance,langue,estSoutenue,estAccessible,discipline,nnt,iddoc,resume_fr,resume_en) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        $conn = $conn->prepare($sql);
+        $conn->execute([$this->titreThese_fr, $this->titreThese_en, $this->dateSoutance, $this->langueThese, $this->estSoutenue, $this->estAccessible, $this->discipline, $this->nnt, $this->iddoc, $this->resume_fr, $this->resume_en]);
+        }catch(PDOException $e){
+            echo $e->getMessage();
+        }
+        print_r($conn->errorInfo());
+        echo "<br>";
 
 
+    }
 
 
 

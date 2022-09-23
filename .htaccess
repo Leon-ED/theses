@@ -1,0 +1,7 @@
+ErrorDocument 401 "Authorisation Required"
+AuthType Basic
+AuthName "Mot de passe requis"
+AuthUserFile /home/3binf2/leon.edmee/WWW-perso/but-projet-thesefr/config/.htpasswd
+Require user leon.edmee
+Satisfy All
+RewriteRule ^config/ - [L,R=404]
