@@ -90,19 +90,25 @@ class these {
 
 
 
-    
+    public function setTheseId($theseId){
+        $this->idThese = $theseId;
+        return $this;
+    }
 
 
-    public function insertThese($conn){
+    public function insertThese($stmt){
         try{
-        $sql = "INSERT INTO these(titre_fr,titre_en,dateSoutenance,langue,estSoutenue,estAccessible,discipline,nnt,iddoc,resume_fr,resume_en) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        $conn = $conn->prepare($sql);
-        $conn->execute([$this->titreThese_fr, $this->titreThese_en, $this->dateSoutance, $this->langueThese, $this->estSoutenue, $this->estAccessible, $this->discipline, $this->nnt, $this->iddoc, $this->resume_fr, $this->resume_en]);
+
+        $stmt->execute([$this->titreThese_fr, $this->titreThese_en, $this->dateSoutance, $this->langueThese, $this->estSoutenue, $this->estAccessible, $this->discipline, $this->nnt, $this->iddoc, $this->resume_fr, $this->resume_en]);
+        
+        return 0;
+       
         }catch(PDOException $e){
             echo $e->getMessage();
+            echo "<br>";
         }
-        print_r($conn->errorInfo());
-        echo "<br>";
+        
+        
 
 
     }
