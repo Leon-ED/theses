@@ -19,12 +19,9 @@ $allNnts = getAllNnt($conn);
 $i = 0;
 $sql = "INSERT INTO these(titre_fr,titre_en,dateSoutenance,langue,estSoutenue,estAccessible,discipline,nnt,iddoc,resume_fr,resume_en) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 $insertTheseStmt = $conn->prepare($sql);
+
+$personnes = array();
 foreach($data as $these){
-    $i = $i+1;
-    if($i >= 50){
-        break;
-    }
-    echo $i;
 
 
         // On vérifie que la thèse n'est pas déjà présente dans la base de données
@@ -64,20 +61,46 @@ foreach($data as $these){
         $internalTheseId = $conn->lastInsertId();
         $theseObj->setTheseId($internalTheseId);
 
-
+        $personnes[strval($nnt)] = array();
+        $perosnnes[strval($nnt)]["id"] = $internalTheseId;
 
 
         $directeursTheses = array();
+        $personnes[strval($nnt)]["directeurs_these"] = array();
+
         foreach($these["directeurs_these"] as $directeur){
-            print_r($directeur);
-            $directeurObj = new personne();
-            $directeurObj->setNom($directeur["nom"])
-                       ->setPrenom($directeur["prenom"])
-                       ->setIdRef($directeur["idref"]);
-                       //->insertPersonne();
-                    //    ->insertDirecteur($conn, $theseDBID,$nnt);
-            $directeursTheses[] = $directeurObj;
+            array_push($personnes[strval($nnt)]["directeurs_these"], $directeur);
+
+
+            // print_r($directeur);
+            // $directeurObj = new personne();
+            // $directeurObj->setNom($directeur["nom"])
+            //            ->setPrenom($directeur["prenom"])
+            //            ->setIdRef($directeur["idref"])
+            //            ->insertPersonne($conn);
+            //             // ->insertDirecteur($conn, $theseDBID,$nnt);
+            // $directeursTheses[] = $directeurObj;
         }
+
+
+}
+// print_r($personnes);
+echo "tour au directeurs";
+
+$insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
+$insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idThese,idPersonne,nnt) VALUES(?,?,?)");
+
+echo "oui";
+foreach($personnes as $nnt){
+    foreach($nnt["directeurs_these"] as $directeur){
+        try{
+        $insertPersonneStmt->execute(array($directeur["nom"], $directeur["prenom"], $directeur["idref"]));
+        $bddID = $conn->lastInsertId();
+        $insertDirecteurStmt->execute($bddID,$nnt["id"]);
+        }catch(Exception $e){
+             print_r($insertPersonneStmt->errorInfo());
+        }
+    }
 
 
 }

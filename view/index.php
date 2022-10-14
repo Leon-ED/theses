@@ -9,7 +9,7 @@
     <title>Theses.fr</title>
 </head>
 <body>
-    <h1 class="text-center">Bienvenue</h1>
+    <h1 class="text-center">Recherche des thèses françaises</h1>
     <!-- search bar bootstrap -->
     <div class="container">
         <div class="row">
