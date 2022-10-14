@@ -5,7 +5,7 @@ class base{
     public function __construct(){
         $servername = "sqletud.u-pem.fr";
         $username = "leon.edmee";
-        $password = "SQL.BDD.Iut.971";
+        $password = "L26?4#j10OOb";
         $dbname = "leon.edmee_db";
 
         try {

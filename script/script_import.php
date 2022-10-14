@@ -62,7 +62,7 @@ foreach($data as $these){
         $theseObj->setTheseId($internalTheseId);
 
         $personnes[strval($nnt)] = array();
-        $perosnnes[strval($nnt)]["id"] = $internalTheseId;
+        $personnes[strval($nnt)]["id"] = $nnt;
 
 
         $directeursTheses = array();
@@ -85,22 +85,31 @@ foreach($data as $these){
 
 }
 // print_r($personnes);
-echo "tour au directeurs";
 
-$insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
-$insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idThese,idPersonne,nnt) VALUES(?,?,?)");
 
-echo "oui";
+// $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
+// $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
+$directeurs = array();
 foreach($personnes as $nnt){
     foreach($nnt["directeurs_these"] as $directeur){
-        try{
+
+        $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
         $insertPersonneStmt->execute(array($directeur["nom"], $directeur["prenom"], $directeur["idref"]));
+
         $bddID = $conn->lastInsertId();
-        $insertDirecteurStmt->execute($bddID,$nnt["id"]);
-        }catch(Exception $e){
-             print_r($insertPersonneStmt->errorInfo());
-        }
+        array_push($directeurs, array("id" => $bddID, "nnt" => $nnt["id"]));
+
+
+        // echo "idref : ".$bddID." nnt : ".$nnt["id"]."<br>";
+
+        // print_r($insertDirecteurStmt->errorInfo());
+
     }
 
 
+}
+
+foreach($directeurs as $directeur){
+    $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
+    $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
 }
