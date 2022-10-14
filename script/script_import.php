@@ -71,17 +71,10 @@ foreach($data as $these){
         foreach($these["directeurs_these"] as $directeur){
             array_push($personnes[strval($nnt)]["directeurs_these"], $directeur);
 
-
-            // print_r($directeur);
-            // $directeurObj = new personne();
-            // $directeurObj->setNom($directeur["nom"])
-            //            ->setPrenom($directeur["prenom"])
-            //            ->setIdRef($directeur["idref"])
-            //            ->insertPersonne($conn);
-            //             // ->insertDirecteur($conn, $theseDBID,$nnt);
-            // $directeursTheses[] = $directeurObj;
         }
-
+        foreach($these["auteurs"] as $auteur){
+            array_push($personnes[strval($nnt)]["auteurs"], $auteur);
+        }
 
 }
 // print_r($personnes);
@@ -90,13 +83,15 @@ foreach($data as $these){
 // $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
 // $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
 $directeurs = array();
+$auteurs = array();
 foreach($personnes as $nnt){
     foreach($nnt["directeurs_these"] as $directeur){
-
         $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
         $insertPersonneStmt->execute(array($directeur["nom"], $directeur["prenom"], $directeur["idref"]));
 
         $bddID = $conn->lastInsertId();
+
+
         array_push($directeurs, array("id" => $bddID, "nnt" => $nnt["id"]));
 
 
@@ -105,11 +100,25 @@ foreach($personnes as $nnt){
         // print_r($insertDirecteurStmt->errorInfo());
 
     }
+    foreach($nnt["auteur"] as $auteur){
+        $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
+        $insertPersonneStmt->execute(array($auteur["nom"], $auteur["prenom"], $auteur["idref"]));
+
+        $bddID = $conn->lastInsertId();
+        array_push($auteurs, array("id" => $bddID, "nnt" => $nnt["id"]));
+
+
+    }
 
 
 }
 
 foreach($directeurs as $directeur){
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
+    $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
+}
+print_r($auteurs);
+foreach($auteurs as $auteur){
+    $insertDirecteurStmt = $conn->prepare("INSERT INTO a_ecrit(idPersonne,nnt) VALUES(?,?)");
     $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
 }
