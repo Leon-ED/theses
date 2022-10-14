@@ -1,10 +1,16 @@
 <?php
+$folder = "~leon.edmee/but-projet-thesefr";
 
 
-$servername = "sqletud.u-pem.fr";
-$username = "leon.edmee";
-$password = "L26?4#j10OOb";
-$dbname = "leon.edmee_db";
+$file = file_get_contents($_SERVER['SERVER_NAME'] . "/$folder/config/credentials.json");
+$credentials = json_decode($file, true);
+
+echo $_SERVER['SERVER_NAME'] . "/$folder/config/config.php";
+
+$servername = $credentials["servername"];
+$username = $credentials["login"];
+$password = $credentials["password"];
+$dbname = $credentials["db_name"];
 
 try {
   $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
