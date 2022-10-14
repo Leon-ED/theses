@@ -100,10 +100,10 @@ class these {
         try{
 
         $stmt->execute([$this->titreThese_fr, $this->titreThese_en, $this->dateSoutance, $this->langueThese, $this->estSoutenue, $this->estAccessible, $this->discipline, $this->nnt, $this->iddoc, $this->resume_fr, $this->resume_en]);
-        
         return 0;
        
         }catch(PDOException $e){
+            echo $this->nnt;
             echo $e->getMessage();
             echo "<br>";
         }

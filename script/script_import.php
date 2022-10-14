@@ -24,12 +24,18 @@ $personnes = array();
 foreach($data as $these){
 
 
+    // En local pour tester sans importer toute la data.
+    // $i++;
+    // if($i >= 20){
+    //     break;
+    // }
+
         // On vérifie que la thèse n'est pas déjà présente dans la base de données
         if(in_array($these['nnt'], $allNnts)){
-            // echo "NNT déjà existant : ".$these['nnt']."i =".$i."<br>";
             continue;
         }
 
+        // On récupère les informations de la thèse
         $titre = array("fr" => $these["titres"]["fr"], "en" => $these["titres"]["en"]);
         $resume = array("fr" => $these["resumes"]["fr"], "en" => $these["resumes"]["en"]);
         $auteur = array("nom" => $these["auteur"]["nom"], "prenom" => $these["auteur"]["prenom"]);
@@ -44,6 +50,8 @@ foreach($data as $these){
         $iddn = $these["iddoc"];
         $nnt = $these["nnt"];
     
+
+        // On crée un objet thèse et on lui mets ses champs
         $theseObj = new these();
         $theseObj
             ->setTitre($titre["fr"], $titre["en"])
@@ -57,6 +65,8 @@ foreach($data as $these){
             ->setIddoc($iddn)
             ->setNnt($nnt);
     
+
+        // On insère la thèse dans la BDD et on récupère son internal ID.
         $theseObj->insertThese($insertTheseStmt);
         $internalTheseId = $conn->lastInsertId();
         $theseObj->setTheseId($internalTheseId);
@@ -65,8 +75,10 @@ foreach($data as $these){
         $personnes[strval($nnt)]["id"] = $nnt;
 
 
+        
         $directeursTheses = array();
         $personnes[strval($nnt)]["directeurs_these"] = array();
+        $personnes[strval($nnt)]["auteurs"] = array();
 
         foreach($these["directeurs_these"] as $directeur){
             array_push($personnes[strval($nnt)]["directeurs_these"], $directeur);
@@ -74,16 +86,14 @@ foreach($data as $these){
         }
         foreach($these["auteurs"] as $auteur){
             array_push($personnes[strval($nnt)]["auteurs"], $auteur);
+
         }
 
 }
-// print_r($personnes);
 
-
-// $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
-// $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
 $directeurs = array();
 $auteurs = array();
+print_r($personnes);
 foreach($personnes as $nnt){
     foreach($nnt["directeurs_these"] as $directeur){
         $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
@@ -94,13 +104,10 @@ foreach($personnes as $nnt){
 
         array_push($directeurs, array("id" => $bddID, "nnt" => $nnt["id"]));
 
-
-        // echo "idref : ".$bddID." nnt : ".$nnt["id"]."<br>";
-
-        // print_r($insertDirecteurStmt->errorInfo());
-
     }
-    foreach($nnt["auteur"] as $auteur){
+    print_r($nnt["auteurs"]);
+    foreach($nnt["auteurs"] as $auteur){
+  
         $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
         $insertPersonneStmt->execute(array($auteur["nom"], $auteur["prenom"], $auteur["idref"]));
 
@@ -120,5 +127,5 @@ foreach($directeurs as $directeur){
 print_r($auteurs);
 foreach($auteurs as $auteur){
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_ecrit(idPersonne,nnt) VALUES(?,?)");
-    $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
+    $insertDirecteurStmt->execute(array($auteur["id"], $auteur["nnt"]));
 }
