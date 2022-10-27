@@ -139,21 +139,27 @@ class these {
      * @param Statement $stmt Requête préparée pour insérer une thèse
      * @return none
      */
-    public function insertThese($stmt){
+    public function insertThese($conn){
         try{
-
-        $stmt->execute([$this->titreThese_fr, $this->titreThese_en, $this->dateSoutance, $this->langueThese, $this->estSoutenue, $this->estAccessible, $this->discipline, $this->nnt, $this->iddoc, $this->resume_fr, $this->resume_en]);
+        $sql = "INSERT INTO these(titre_fr,titre_en,dateSoutenance,langue,estSoutenue,estAccessible,discipline,nnt,iddoc,resume_fr,resume_en) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+        $insertSTMT = $conn->prepare($sql);
+        $insertSTMT->execute([$this->titreThese_fr, $this->titreThese_en, $this->dateSoutance, $this->langueThese, $this->estSoutenue, $this->estAccessible, $this->discipline, $this->nnt, $this->iddoc, $this->resume_fr, $this->resume_en]);
         return 0;
        
         }catch(PDOException $e){
             echo $this->nnt;
-            echo $e->getMessage();
-            echo "<br>";
+            // echo $e->getMessage();
+            // echo "<br>";
         }
         
         
 
 
+
+    }
+
+    function getTheseId() {
+        return $this->idThese;
     }
 
 
