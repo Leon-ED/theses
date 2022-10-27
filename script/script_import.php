@@ -8,7 +8,7 @@ try{
 
 
 }catch(Exception $e){
-    echo $e->getMessage();
+    die("Une erreur a eu lieu lors de la lecture du fichier JSON");
 }
 
 
