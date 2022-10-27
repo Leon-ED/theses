@@ -1,19 +1,12 @@
 <?php
-$folder = "~leon.edmee/but-projet-thesefr";
 
 
-$file = file_get_contents($_SERVER['SERVER_NAME'] . "/$folder/config/credentials.json");
-$credentials = json_decode($file, true);
+require_once("credentials.php");
 
-echo $_SERVER['SERVER_NAME'] . "/$folder/config/config.php";
 
-$servername = $credentials["servername"];
-$username = $credentials["login"];
-$password = $credentials["password"];
-$dbname = $credentials["db_name"];
 
 try {
-  $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+  $conn = new PDO("mysql:host=$servername;dbname=$db_name", $username, $password);
   // set the PDO error mode to exception
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);

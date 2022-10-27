@@ -9,3 +9,14 @@
         
     
     }
+
+
+    function getAllPersonnesIdRef($conn){
+        $sql = "SELECT idRef FROM personne;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $AllNnt = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        return $AllNnt;
+        
+    
+    }

@@ -15,7 +15,6 @@ try{
 $allNnts = getAllNnt($conn);
 
 
-
 $i = 0;
 $sql = "INSERT INTO these(titre_fr,titre_en,dateSoutenance,langue,estSoutenue,estAccessible,discipline,nnt,iddoc,resume_fr,resume_en) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 $insertTheseStmt = $conn->prepare($sql);
@@ -93,26 +92,31 @@ foreach($data as $these){
 
 $directeurs = array();
 $auteurs = array();
-print_r($personnes);
 foreach($personnes as $nnt){
     foreach($nnt["directeurs_these"] as $directeur){
+
+
+        try{
         $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
         $insertPersonneStmt->execute(array($directeur["nom"], $directeur["prenom"], $directeur["idref"]));
-
         $bddID = $conn->lastInsertId();
-
-
         array_push($directeurs, array("id" => $bddID, "nnt" => $nnt["id"]));
+        }catch(Exception $e){
+            echo $e->getMessage();
+
+        }
 
     }
     print_r($nnt["auteurs"]);
     foreach($nnt["auteurs"] as $auteur){
-  
+        try{
         $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
         $insertPersonneStmt->execute(array($auteur["nom"], $auteur["prenom"], $auteur["idref"]));
-
         $bddID = $conn->lastInsertId();
         array_push($auteurs, array("id" => $bddID, "nnt" => $nnt["id"]));
+        }catch (Exception $e){
+            echo $e->getMessage();
+        }
 
 
     }
@@ -124,7 +128,6 @@ foreach($directeurs as $directeur){
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
     $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
 }
-print_r($auteurs);
 foreach($auteurs as $auteur){
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_ecrit(idPersonne,nnt) VALUES(?,?)");
     $insertDirecteurStmt->execute(array($auteur["id"], $auteur["nnt"]));
