@@ -19,7 +19,9 @@ $i = 0;
 $sql = "INSERT INTO these(titre_fr,titre_en,dateSoutenance,langue,estSoutenue,estAccessible,discipline,nnt,iddoc,resume_fr,resume_en) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
 $insertTheseStmt = $conn->prepare($sql);
 
-$personnes = array();
+$sujets = array(); //Liste de tous les sujets
+$etablissements_soutenance = array(); // Liste de tous les établissements de soutenance
+$personnes = array(); //Liste de toutes les personnes
 foreach($data as $these){
 
 
@@ -49,6 +51,14 @@ foreach($data as $these){
         $iddn = $these["iddoc"];
         $nnt = $these["nnt"];
     
+        // On vérifie que la thèse a des sujets définis et on les ajoute à la liste des sujets
+        if(isset($these["sujets"]["fr"])){
+            foreach($these["sujets"]["fr"] as $sujet){
+                if(!in_array($sujet, $sujets)){
+                    $sujets[] = $sujet;
+                }
+            }
+        }
 
         // On crée un objet thèse et on lui mets ses champs
         $theseObj = new these();
@@ -70,15 +80,17 @@ foreach($data as $these){
         $internalTheseId = $conn->lastInsertId();
         $theseObj->setTheseId($internalTheseId);
 
+        // On ajoute le nnt de la thèse dans la liste des personnes pour y mettre l'auteur et le/s directeur/s
         $personnes[strval($nnt)] = array();
         $personnes[strval($nnt)]["id"] = $nnt;
 
 
-        
+        // On créer la liste des auteurs et directeurs
         $directeursTheses = array();
         $personnes[strval($nnt)]["directeurs_these"] = array();
         $personnes[strval($nnt)]["auteurs"] = array();
 
+        // On boucle sur chaque directeur et auteur de la thèse pour les ajouter dans les listes correspondantes
         foreach($these["directeurs_these"] as $directeur){
             array_push($personnes[strval($nnt)]["directeurs_these"], $directeur);
 
@@ -90,6 +102,7 @@ foreach($data as $these){
 
 }
 
+// On boucle sur les directeurs et les auteurs afin de les ajouter à la base
 $directeurs = array();
 $auteurs = array();
 foreach($personnes as $nnt){
@@ -124,6 +137,7 @@ foreach($personnes as $nnt){
 
 }
 
+// On boucle sur chaque directeur et auteur pour les lier à la thèse qu'ils ont dirigé et/ou écrit
 foreach($directeurs as $directeur){
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
     $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
@@ -131,4 +145,17 @@ foreach($directeurs as $directeur){
 foreach($auteurs as $auteur){
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_ecrit(idPersonne,nnt) VALUES(?,?)");
     $insertDirecteurStmt->execute(array($auteur["id"], $auteur["nnt"]));
+}
+
+// On ajoute les mots clés dans la liste des mots clés puis on ajoute à chaque thèse son lien vers le mot clé
+foreach($sujets as $sujet){
+    try{
+    $insertSujetStmt = $conn->prepare("INSERT INTO liste_mots_cles(mot) VALUES(?)");
+    $insertSujetStmt->execute(array($sujet));
+    $sujetId = $conn->lastInsertId();
+    }catch(Exception $e){
+        echo $e->getMessage();
+    }
+    // $insertSujetTheseStmt = $conn->prepare("INSERT INTO sujet_these(idSujet,nnt) VALUES(?,?)");
+    // $insertSujetTheseStmt->execute(array($sujetId, $nnt));
 }
