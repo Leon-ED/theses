@@ -59,7 +59,7 @@ foreach ($data as $these) {
     }
 
     // On crée un objet thèse et on lui mets ses champs
-    $theseObj = new these();
+    $theseObj = new These();
     $theseObj
         ->setTitre($titre["fr"], $titre["en"])
         ->setResume($resume["fr"], $resume["en"])

@@ -63,3 +63,73 @@ a {
     background-color: #ccc;
     margin: 1% auto;
 }
+
+.these-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+.these-card {
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #ccc;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 1%;
+    padding: 1%;
+}
+
+.these-card-title {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.these-card-title a {
+    color: #000;
+}
+
+.these-card-title::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.these-card-header {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.these-card-header .these-card-author {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.these-card-header .these-card-date {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.these-card-body {
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+
+}
