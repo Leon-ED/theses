@@ -2,7 +2,7 @@
 
 Pour utiliser le projet :
 créer un fichier <code>credentials.php</code> dans le dossier<code>config</code>
-comme ceci :
+comme ceci :<br>
 <code><?php
 $servername = "URL_SERVEUR";
 $username = "NOM_UTILISATEUR";
