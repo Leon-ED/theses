@@ -17,7 +17,6 @@ class These
     private  $discipline;
     private  $estSoutenue;
     private  $estAccessible;
-    private  $langue;
     private  $langueThese;
     private $nnt;
     private $iddoc;
@@ -75,6 +74,8 @@ class These
      */
     public function setDateSoutenance($date)
     {
+        //format date : DD/MM/YYYY
+        $date = date("d/m/Y", strtotime($date));
         $this->dateSoutance = $date;
         return $this;
     }
@@ -146,7 +147,7 @@ class These
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $this->setTitre($result["titre_fr"], $result["titre_en"]);
         $this->setResume($result["resume_fr"], $result["resume_en"]);
-        $this->setDateSoutenance($result["dateSoutance"]);
+        $this->setDateSoutenance($result["dateSoutenance"]);
         $this->setDiscipline($result["discipline"]);
         $this->setSoutenue($result["estSoutenue"]);
         $this->setAccessible($result["estAccessible"]);
@@ -235,5 +236,24 @@ class These
     function getTheseId()
     {
         return $this->idThese;
+    }
+
+
+    /**
+     * Retourne la date de la soutenance
+     * @return string Date de la soutenance
+     */
+    function getDateSoutenance(): ?string
+    {
+        return $this->dateSoutance;
+    }
+
+    /**
+     * Retourne le lien vers la thèse sur theses.fr
+     * @return string Lien vers la thèse sur theses.fr
+     */
+    function getLink(): string
+    {
+        return "http://www.theses.fr/" . $this->nnt;
     }
 }

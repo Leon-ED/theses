@@ -29,10 +29,10 @@ function echoThese(array $listeThese): void
         <section class="these-list">
             <div class="these-card">
                 <div class="these-card-header">
-                    <h2 class="these-card-title"><a href="#"><?= $these->getTitre(); ?></a></h2>
+                    <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= $these->getTitre(); ?></a></h2>
                     <div class="these-card-infos">
                         <p>par <span class="these-card-author"><a href="#"><span><?= $these->getAuteur($conn); ?></span></a></p>
-                        <p>le : <span class="these-card-date">20/20/2020</span></p>
+                        <p>le : <span class="these-card-date"><?= $these->getDateSoutenance() ?></span></p>
                     </div>
                 </div>
                 <div class="these-card-body">
