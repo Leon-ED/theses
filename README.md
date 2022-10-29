@@ -1,7 +1,7 @@
 # but-projet-thesefr
 
 Pour utiliser le projet :
-créer un fichier <code>credentials.php</code> dans le dossier<code>config</code>
+créer un fichier <code>credentials.php</code> dans le dossier <code>config</code>
 comme ceci :<br>
 <code><pre><?php
 $servername = "URL_SERVEUR";
