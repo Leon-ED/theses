@@ -3,7 +3,7 @@ require_once("../config/config.php");
 
 
 try {
-    $file = file_get_contents("../IN/extract_theses.json");
+    $file = file_get_contents("../fichiers/extract_theses.json");
     $data = json_decode($file, true);
 } catch (Exception $e) {
     die("Une erreur a eu lieu lors de la lecture du fichier JSON");
