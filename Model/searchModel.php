@@ -37,3 +37,19 @@ OR these.idThese IN (SELECT idThese FROM mots_cle WHERE mots_cle.idMot IN (SELEC
     }
     return $recherche_these;
 }
+
+function getStatsFromResults($results)
+{
+    global $conn;
+    $stats = array();
+    // Nombre de thèses
+    $stats["nombre_theses"] = count($results);
+    // Nombre d'établissements
+    $stats["nombre_etablissements"] = 0;
+    // Nombre directeurs de thèses
+    $stats["nombre_directeurs"] = 0;
+    // Nombre d'auteurs
+    $stats["nombre_auteurs"] = 0;
+
+    print_r($stats);
+}

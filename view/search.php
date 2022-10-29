@@ -9,7 +9,7 @@ require_once("../controller/searchController.php");
     <?php require_once("../include/nav.inc.php") ?>
 
     <h3 class="search-result-h">Résultats de recherche :</h2>
-
+        <?php require_once("../include/dashboard.inc.php"); ?>
 
 
 
