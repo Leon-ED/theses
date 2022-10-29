@@ -1,4 +1,5 @@
 <?php
+$file = "index.php";
 require_once("../config/config.php");
 require_once("../include/html.header.inc.php");
 
@@ -6,7 +7,9 @@ require_once("../controller/indexController.php");
 ?>
 
 <body>
-    <h1 class="text-center" style="margin-top:10%;">Recherche des thèses françaises</h1>
+    <?php require_once("../include/nav.inc.php") ?>
+
+    <h1 class="text-center" style="margin-top:1%;">Recherche des thèses françaises</h1>
     <div class="container">
         <div class="row">
             <div class="col-12">
