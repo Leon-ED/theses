@@ -11,6 +11,8 @@ $nombre_etablissements = $stats['nombre_etablissements'];
 
 $theses = createTheseFromResults($resultats);
 
+
+
 /**
  * Affiche le résumé de chaque thèse d'une liste
  * 
@@ -21,6 +23,7 @@ $theses = createTheseFromResults($resultats);
 function echoThese(array $listeThese): void
 {
     global $conn;
+
     foreach ($listeThese as $these) {
         if (!is_a($these, 'These')) {
             throw new Exception("La liste de thèses contient un objet qui n'est pas une thèse.");
@@ -38,7 +41,7 @@ function echoThese(array $listeThese): void
                 <div class="these-card-body">
                     <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
                     <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
-                    <p>Mots-clés: <a href="#"><span>Mathématiques</span></a> , <a href="#"><span>Cuisine</span></a> , <a href="#"><span>Mathématiques</span></a> , <a href="#"><span>Cuisine</span></a> </p>
+                    <p>Mots-clés: <?php echoTheseMotsCles($these) ?></p>
 
 
                 </div>
@@ -47,4 +50,21 @@ function echoThese(array $listeThese): void
 
     <?php
     }
+}
+
+
+/**
+ * Affiche le code HTML des mots-clés d'une thèse
+ * @param These $these
+ * @return void
+ */
+function echoTheseMotsCles(These $these): void
+{
+    global $conn;
+    $str = "";
+    foreach ($these->getMotsCles($conn) as $motCle) {
+
+        $str = $str . "<a href='?mc=$motCle[idMot]'><span>$motCle[mot]</span></a> , ";
+    }
+    echo substr($str, 0, -2);
 }

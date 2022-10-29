@@ -256,4 +256,19 @@ class These
     {
         return "http://www.theses.fr/" . $this->nnt;
     }
+
+    /**
+     * Retourne la liste des mots clés de la thèse
+     * @param PDO $conn Connexion à la base de données
+     * @return array Liste des mots clés de la thèse
+     */
+    function getMotsCles($conn): array
+    {
+        $sql = "SELECT lst.idMot, lst.mot FROM liste_mots_cles AS lst, mots_cle AS mc WHERE lst.idMot = mc.idMot AND mc.idThese = :idThese";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":idThese", $this->idThese);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
