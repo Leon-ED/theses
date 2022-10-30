@@ -74,8 +74,6 @@ class These
      */
     public function setDateSoutenance($date)
     {
-        //format date : DD/MM/YYYY
-        $date = date("d/m/Y", strtotime($date));
         $this->dateSoutance = $date;
         return $this;
     }
@@ -228,7 +226,8 @@ class These
             return 0;
         } catch (PDOException $e) {
             echo $this->nnt;
-            // echo $e->getMessage();
+            // print_r($conn->errorInfo());
+            echo $e->getMessage();
             // echo "<br>";
         }
     }
