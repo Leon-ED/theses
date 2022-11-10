@@ -101,8 +101,6 @@ foreach ($data as $these) {
     try {
         //On boucle sur les établissements de soutenance
         foreach ($these["etablissements_soutenance"] as $etablissement) {
-            print_r($etablissement);
-            die;
             // On créé l'objet établissement et on lui mets ses champs
             $etablissementOBJ = new Etablissement();
             $etablissementOBJ
