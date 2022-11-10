@@ -15,20 +15,13 @@ class Etablissement
         if (!($etablissementOBJ instanceof Etablissement)) {
             throw new InvalidArgumentException("Le premier paramètre doit être un objet de type Etablissement");
         }
-        echo "null ? : " . $etablissementOBJ->getIdRef() == null;
-        if ($etablissementOBJ->getIdRef() == null) {
-            foreach ($listeEtablissement as $etablissement) {
-                if ($etablissement->getName() == $etablissementOBJ->getName()) {
-                    return $etablissement;
-                }
-            }
-        } else {
-            foreach ($listeEtablissement as $etablissement) {
-                if ($etablissement->getName() == $etablissementOBJ->getName() && $etablissement->getIdRef() == $etablissementOBJ->getIdRef()) {
-                    return $etablissement;
-                }
+
+        foreach ($listeEtablissement as $etablissement) {
+            if ($etablissementOBJ->equals($etablissement)) {
+                return $etablissement;
             }
         }
+
         return null;
     }
 
@@ -142,5 +135,12 @@ class Etablissement
     {
         $this->bddID = $bddID;
         return $this;
+    }
+
+
+    public function equals(Etablissement $etablissement)
+    {
+        return $this->idRef == $etablissement->getIdRef() &&
+            $this->name == $etablissement->getName();
     }
 }
