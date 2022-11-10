@@ -61,6 +61,10 @@ function echoTheseMotsCles(These $these): void
     global $conn;
     $str = "";
     $liste_mots = $these->getMotsCles($conn);
+    if (is_string($liste_mots)) {
+        echo $liste_mots;
+        return;
+    }
     foreach ($liste_mots as $motCle) {
         $str = $str . "<a href='?mc=$motCle[id]'><span>$motCle[mot]</span></a> , ";
     }

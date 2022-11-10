@@ -290,9 +290,9 @@ class These
     /**
      * Retourne la liste des mots clés de la thèse
      * @param PDO $conn Connexion à la base de données
-     * @return array Liste des mots clés de la thèse
+     * @return array|string Liste des mots clés de la thèse ou un message d'erreur
      */
-    function getMotsCles($conn): array
+    function getMotsCles($conn): array|string
     {
         $sql = "SELECT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
         $stmt = $conn->prepare($sql);
@@ -300,7 +300,7 @@ class These
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($result == null) {
-            return array("id" => -1, "mot" => "Aucun mot clé");
+            return "Aucun mot clé";
         }
         return $result;
     }
