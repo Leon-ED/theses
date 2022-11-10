@@ -12,7 +12,7 @@ if (isset($_GET['msg'])) {
     $bootstrap_alert = '
     <section class="bootstrap-alert">
         <div class="alert alert-info alert-dismissible fade show" role="alert">
-            ' . $msg . '
+            Aucune thèse n\' a été trouvée pour cette recherche.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </section>
     ';
