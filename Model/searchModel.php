@@ -22,13 +22,12 @@ function getSearchResults(): array
     $recherche = $_GET["search"];
     // On fait la recherche sur les titres, la discipline,les mots-clés et l'auteur
     $sql = "
-SELECT these.idThese,nnt FROM these
-WHERE titre_fr LIKE :recherche
-OR titre_en LIKE :recherche
-OR discipline LIKE :recherche
-OR nnt LIKE :recherche
-OR these.nnt IN (SELECT nnt FROM a_ecrit  WHERE a_ecrit.id IN (SELECT idPersonne FROM personne WHERE nomPersonne LIKE :recherche OR prenomPersonne LIKE :recherche))
-OR these.idThese IN (SELECT idThese FROM mots_cle WHERE mots_cle.idMot IN (SELECT idMot FROM liste_mots_cles WHERE mot LIKE :recherche))
+    SELECT DISTINCT these.idThese, these.nnt FROM these,a_ecrit,personne,mots_cle,liste_mots_cles
+    WHERE titre_fr LIKE :recherche
+    OR titre_en LIKE :recherche
+    OR discipline LIKE :recherche
+    OR these.nnt LIKE :recherche
+    OR (a_ecrit.nnt = these.nnt AND personne.idPersonne = a_ecrit.idPersonne AND (personne.nomPersonne LIKE :recherche OR personne.prenomPersonne LIKE :recherche OR CONCAT(personne.prenomPersonne, ' ', personne.nomPersonne) LIKE :recherche))
 ";
     // On exécute la requête
     $recherche_these = $conn->prepare($sql);

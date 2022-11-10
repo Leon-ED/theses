@@ -276,9 +276,9 @@ class These
      */
     function getMotsCles($conn): array
     {
-        $sql = "SELECT lst.idMot, lst.mot FROM liste_mots_cles AS lst, mots_cle AS mc WHERE lst.idMot = mc.idMot AND mc.idThese = :idThese";
+        $sql = "SELECT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":idThese", $this->idThese);
+        $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;

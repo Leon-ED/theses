@@ -39,7 +39,7 @@ function echoThese(array $listeThese): void
                 <div class="these-card-body">
                     <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
                     <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
-                    <p>Mots-clés: </p>
+                    <p>Mots-clés: <?php echoTheseMotsCles($these) ?></p>
                 </div>
             </div>
 
@@ -56,11 +56,11 @@ function echoThese(array $listeThese): void
  */
 function echoTheseMotsCles(These $these): void
 {
-   
+    
     global $conn;
     $str = "";
-    foreach ($these->getMotsCles($conn) as $motCle) {
-
+    $liste_mots = $these->getMotsCles($conn);
+    foreach ($liste_mots as $motCle) {
         $str = $str . "<a href='?mc=$motCle[idMot]'><span>$motCle[mot]</span></a> , ";
     }
     echo substr($str, 0, -2);
