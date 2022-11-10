@@ -98,43 +98,37 @@ foreach ($data as $these) {
         array_push($personnes[strval($nnt)]["auteurs"], $auteur);
     }
 
-    try {
-        //On boucle sur les établissements de soutenance
-        foreach ($these["etablissements_soutenance"] as $etablissement) {
-            // On créé l'objet établissement et on lui mets ses champs
-            if ($etablissement["idref"] == null) {
-                $etablissement["idref"] = "undef";
-            }
-            $etablissementOBJ = new Etablissement();
-            $etablissementOBJ
-                ->setNom($etablissement["nom"])
-                ->setIdRef($etablissement["idref"]);
 
-            //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
-            $resultat = Etablissement::etablissement_in_array($etablissementOBJ, $etablissements_soutenance);
-            print_r($resultat);
-
-            // Si le résultat est null, c'est que l'établissement n'est pas dans la liste
-            if ($resultat == null) {
-                $etablissements_soutenance[] = $etablissementOBJ; // On ajoute l'établissement à la liste
-                $etablissementOBJ->insertEtablissement($conn); // On insère l'établissement dans la base;
-
-
-            } else {  //Il y a un résultat on le récupère donc
-                unset($etablissementOBJ); // On supprime l'objet établissement
-                $etablissementOBJ = $resultat; // On récupère le bon établissement
-            }
-            $theseObj->addEtablissement($etablissementOBJ); // On ajoute l'établissement à la thèse
-            addLiaisonEtablissement($theseObj, $conn); // On fait le lien entre la thèse et l'établissement
+    //On boucle sur les établissements de soutenance
+    foreach ($these["etablissements_soutenance"] as $etablissement) {
+        // On créé l'objet établissement et on lui mets ses champs
+        if ($etablissement["idref"] == null) {
+            $etablissement["idref"] = "undef";
         }
-    } catch (Exception $e) {
-        echo $e->getMessage();
-        print_r($conn->errorInfo());
-        die;
+        $etablissementOBJ = new Etablissement();
+        $etablissementOBJ
+            ->setNom($etablissement["nom"])
+            ->setIdRef($etablissement["idref"]);
+
+        //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
+        $resultat = Etablissement::etablissement_in_array($etablissementOBJ, $etablissements_soutenance);
+        print_r($resultat);
+
+        // Si le résultat est null, c'est que l'établissement n'est pas dans la liste
+        if ($resultat == null) {
+            $etablissements_soutenance[] = $etablissementOBJ; // On ajoute l'établissement à la liste
+            $etablissementOBJ->insertEtablissement($conn); // On insère l'établissement dans la base;
+
+
+        } else {  //Il y a un résultat on le récupère donc
+            unset($etablissementOBJ); // On supprime l'objet établissement
+            $etablissementOBJ = $resultat; // On récupère le bon établissement
+        }
+        $theseObj->addEtablissement($etablissementOBJ); // On ajoute l'établissement à la thèse
+        addLiaisonEtablissement($theseObj, $conn); // On fait le lien entre la thèse et l'établissement
     }
 }
 
-die;
 // On boucle sur les directeurs et les auteurs afin de les ajouter à la base
 $directeurs = array();
 $auteurs = array();
