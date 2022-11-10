@@ -69,4 +69,5 @@ function echoTheseMotsCles(These $these): void
         $str = $str . "<a href='?mc=$motCle[id]'><span>$motCle[mot]</span></a> , ";
     }
     substr($str, 0, -2);
+    echo $str;
 }
