@@ -65,8 +65,11 @@ function getStatsFromResults(array $results): array
     $sth->execute();
     $stats["nombre_directeurs"] = $sth->fetch()["nombre_directeurs"];
 
-    $stats["nombre_etablissements"] = 0;
-    // Nombre d'auteurs
+    // Nombre d'établissements
+    $sql = "SELECT COUNT(id_etablissement) as nombre_etablissements FROM these_etablissement WHERE nnt IN (" . implodeToSQL(array_column($results, "nnt")) . ")";
+    $sth = $conn->prepare($sql);
+    $sth->execute();
+    $stats["nombre_etablissements"] = $sth->fetch()["nombre_etablissements"];
 
 
     return $stats;
