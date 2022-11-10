@@ -110,6 +110,7 @@ foreach ($data as $these) {
             //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
             $resultat = Etablissement::etablissement_in_array($etablissementOBJ, $etablissements_soutenance);
             print_r($resultat);
+
             // Si le résultat est null, c'est que l'établissement n'est pas dans la liste
             if ($resultat == null) {
                 $etablissements_soutenance[] = $etablissementOBJ; // On ajoute l'établissement à la liste

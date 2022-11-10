@@ -15,6 +15,7 @@ class Etablissement
         if (!($etablissementOBJ instanceof Etablissement)) {
             throw new InvalidArgumentException("Le premier paramètre doit être un objet de type Etablissement");
         }
+        echo "null ? : " . $etablissementOBJ->getIdRef() == null;
         if ($etablissementOBJ->getIdRef() == null) {
             foreach ($listeEtablissement as $etablissement) {
                 if ($etablissement->getName() == $etablissementOBJ->getName()) {
