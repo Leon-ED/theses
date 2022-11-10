@@ -294,7 +294,7 @@ class These
      */
     function getMotsCles($conn): array|string
     {
-        $sql = "SELECT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
+        $sql = "SELECT DISTINCT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
