@@ -141,7 +141,7 @@ class Etablissement
 
     public function equals(Etablissement $etablissement)
     {
-        return $this->idRef == $etablissement->getIdRef() &&
+        return $this->idRef == $etablissement->getIdRef() ||
             $this->name == $etablissement->getName();
     }
 }
