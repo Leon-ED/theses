@@ -39,7 +39,7 @@ function echoThese(array $listeThese): void
                 <div class="these-card-body">
                     <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
                     <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
-                    <p>Mots-clés: <?php echoTheseMotsCles($these) ?></p>
+
                 </div>
             </div>
 
@@ -47,7 +47,7 @@ function echoThese(array $listeThese): void
     <?php
     }
 }
-
+//                     <p>Mots-clés: <?php echoTheseMotsCles($these) </p>
 
 /**
  * Affiche le code HTML des mots-clés d'une thèse
