@@ -23,13 +23,11 @@ $theses = createTheseFromResults($resultats);
 function echoThese(array $listeThese): void
 {
     global $conn;
-
     foreach ($listeThese as $these) {
         if (!is_a($these, 'These')) {
-            throw new Exception("La liste de thèses contient un objet qui n'est pas une thèse.");
+            throw new Exception("Cette thèse n'est pas un objet thèse.");
         }
 ?>
-        <section class="these-list">
             <div class="these-card">
                 <div class="these-card-header">
                     <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= $these->getTitre(); ?></a></h2>
@@ -41,9 +39,7 @@ function echoThese(array $listeThese): void
                 <div class="these-card-body">
                     <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
                     <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
-                    <p>Mots-clés: <?php echoTheseMotsCles($these) ?></p>
-
-
+                    <p>Mots-clés: </p>
                 </div>
             </div>
 
@@ -60,6 +56,7 @@ function echoThese(array $listeThese): void
  */
 function echoTheseMotsCles(These $these): void
 {
+   
     global $conn;
     $str = "";
     foreach ($these->getMotsCles($conn) as $motCle) {

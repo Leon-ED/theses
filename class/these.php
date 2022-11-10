@@ -242,7 +242,7 @@ class These
      * Retourne la date de la soutenance
      * @return string Date de la soutenance
      */
-    function getDateSoutenance(): ?string
+    function getDateSoutenance(): string
     {
         return $this->dateSoutance;
     }

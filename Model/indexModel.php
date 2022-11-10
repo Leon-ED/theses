@@ -32,6 +32,5 @@ function getStatsTheses()
     $sth = $conn->prepare($sql);
     $sth->execute();
     $stats["nombre_auteurs"] = $sth->fetch()["nombre_auteurs"];
-
     return $stats;
 }

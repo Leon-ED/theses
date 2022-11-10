@@ -2,8 +2,7 @@
 $file = "index.php";
 require_once("../config/config.php");
 require_once("../include/html.header.inc.php");
-
-require_once("../controller/indexController.php");
+include_once("../controller/indexController.php");
 ?>
 
 <body>
@@ -22,6 +21,6 @@ require_once("../controller/indexController.php");
     </div>
 </body>
 <?= $bootstrap_alert ?>
-<?= require_once("../include/dashboard.inc.php"); ?>
 
+<?= require_once("../include/dashboard.inc.php"); ?>
 </html>
