@@ -1,9 +1,10 @@
 <?php
-try{
-require_once("../config/config.php");
-require_once("../include/html.header.inc.php");
-require_once("../controller/searchController.php");
-}catch(Exception $e){
+try {
+    $file = "search.php";
+    require_once("../config/config.php");
+    require_once("../include/html.header.inc.php");
+    require_once("../controller/searchController.php");
+} catch (Exception $e) {
     echo $e->getMessage();
 }
 ?>

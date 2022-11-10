@@ -23,4 +23,5 @@ include_once("../controller/indexController.php");
 <?= $bootstrap_alert ?>
 
 <?= require_once("../include/dashboard.inc.php"); ?>
+
 </html>

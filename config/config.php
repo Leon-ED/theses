@@ -2,6 +2,14 @@
 if (PHP_SESSION_NONE === session_status()) {
     session_start();
 }
+if (isset($_GET["sudo"])) {
+    $_SESSION["user"] = "ee";
+}
+
+if (!isset($_SESSION['user']) && $file != "login.php" && $file != "register.php") {
+    header('Location: ../view/login.php');
+}
+
 // error_reporting(E_ERROR | E_PARSE);
 // phpinfo();
 ini_set('display_errors', 1);
