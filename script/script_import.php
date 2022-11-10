@@ -26,9 +26,9 @@ foreach ($data as $these) {
 
     // En local pour tester sans importer toute la data.
     $i++;
-    if($i >= 20){
-        break;
-    }
+    // if($i >= 20){
+    //     break;
+    // }
 
     // On vérifie que la thèse n'est pas déjà présente dans la base de données
     if (in_array($these['nnt'], $allNnts)) {
