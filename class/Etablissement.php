@@ -17,13 +17,13 @@ class Etablissement
         }
         if ($etablissementOBJ->getIdRef() == null) {
             foreach ($listeEtablissement as $etablissement) {
-                if ($etablissement->getNom() == $etablissementOBJ->getName()) {
+                if ($etablissement->getName() == $etablissementOBJ->getName()) {
                     return $etablissement;
                 }
             }
         } else {
             foreach ($listeEtablissement as $etablissement) {
-                if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && $etablissement->getIdRef() == $etablissementOBJ->getIdRef()) {
+                if ($etablissement->getName() == $etablissementOBJ->getName() && $etablissement->getIdRef() == $etablissementOBJ->getIdRef()) {
                     return $etablissement;
                 }
             }
