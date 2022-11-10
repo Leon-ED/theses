@@ -107,7 +107,7 @@ foreach ($data as $these) {
             $etablissementOBJ = new Etablissement();
             $etablissementOBJ
                 ->setNom($etablissement["nom"])
-                ->setIdRef($etablissement["idrefe"]);
+                ->setIdRef($etablissement["idref"]);
 
             //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
             $resultat = Etablissement::etablissement_in_array($etablissementOBJ, $etablissements_soutenance);
