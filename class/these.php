@@ -100,6 +100,19 @@ class These
         return $this;
     }
 
+
+        /**
+     * Renvoie le NNT de la thèse
+     * @param string $nnt NNT de la thèse
+     * @return string
+     */
+    public function getNnt() : string
+    {
+        return $this->nnt;
+    }
+    
+
+
     /**
      * Mets la langue de la thèse
      * @param string $langue Langue de la thèse

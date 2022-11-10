@@ -25,10 +25,10 @@ foreach ($data as $these) {
 
 
     // En local pour tester sans importer toute la data.
-    // $i++;
-    // if($i >= 20){
-    //     break;
-    // }
+    $i++;
+    if($i >= 20){
+        break;
+    }
 
     // On vérifie que la thèse n'est pas déjà présente dans la base de données
     if (in_array($these['nnt'], $allNnts)) {
@@ -54,7 +54,7 @@ foreach ($data as $these) {
     if (isset($these["sujets"]["fr"])) {
         foreach ($these["sujets"]["fr"] as $sujet) {
             //On fait le lien entre le sujet et la thèse 
-            $liaison_sujets[] = array("nnt" => $nnt, "sujet" => $sujet);
+            $liaison_sujets["$nnt"][] = $sujet;
             //On ajoute le sujet à la liste des sujets s'il n'est pas déjà dans la liste pour éviter les doublons
             if (!in_array($sujet, $sujets)) {
                 $sujets[] = $sujet;
@@ -78,7 +78,7 @@ foreach ($data as $these) {
 
 
     // On insère la thèse dans la BDD et on récupère son internal ID.
-   // $theseObj->setTheseId($theseObj->insertThese($conn));
+    $theseObj->setTheseId($theseObj->insertThese($conn));
 
     // On ajoute le nnt de la thèse dans la liste des personnes pour y mettre l'auteur et le/s directeur/s
     $personnes[strval($nnt)] = array();
@@ -112,10 +112,10 @@ foreach ($data as $these) {
             // La fonction retourne -1 si elle n'a pas réussi à ajouter la thèse à la BDD
             if ($InternalEtablissementID === -1) {
                 $InternalEtablissementID = searchEtablissement($etablissements_soutenance, $etablissementOBJ); // On recherche dans la liste l'id dans la base de l'établissement
-                $liaison_etablissement[] = array("id_these" => $theseObj->getTheseId(), "id_etablissement" => $InternalEtablissementID); // On ajoute la liaison dans la liste
+                $liaison_etablissement[] = array("id_these" => $theseObj->getNnt(), "id_etablissement" => $InternalEtablissementID); // On ajoute la liaison dans la liste
 
             } else {
-                $liaison_etablissement[] = array("id_these" => $theseObj->getTheseId(), "id_etablissement" => $InternalEtablissementID); // On ajoute la liaison dans la liste
+                $liaison_etablissement[] = array("id_these" => $theseObj->getNnt(), "id_etablissement" => $InternalEtablissementID); // On ajoute la liaison dans la liste
 
             }
         }
@@ -136,6 +136,7 @@ foreach ($personnes as $nnt) {
             $bddID = $conn->lastInsertId();
             array_push($directeurs, array("id" => $bddID, "nnt" => $nnt["id"]));
         } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
     foreach ($nnt["auteurs"] as $auteur) {
@@ -145,14 +146,19 @@ foreach ($personnes as $nnt) {
             $bddID = $conn->lastInsertId();
             array_push($auteurs, array("id" => $bddID, "nnt" => $nnt["id"]));
         } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 }
 
 // On boucle sur chaque directeur et auteur pour les lier à la thèse qu'ils ont dirigé et/ou écrit
 foreach ($directeurs as $directeur) {
+    try{
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
     $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
+    }catch (Exception $e) {
+        echo $e->getMessage();
+    }
 }
 foreach ($auteurs as $auteur) {
     $insertDirecteurStmt = $conn->prepare("INSERT INTO a_ecrit(idPersonne,nnt) VALUES(?,?)");
@@ -166,22 +172,32 @@ foreach ($sujets as $sujet) {
         $insertSujetStmt = $conn->prepare("INSERT INTO liste_mots_cles(mot) VALUES(?)");
         $insertSujetStmt->execute(array($sujet));
         $sujetId = $conn->lastInsertId();
-        array_push($id_sujets, array(strval($sujet) => $sujet, "mot" => $sujetId));
+        array_push($id_sujets, array(strval($sujet) => $sujetId));
 
     } catch (Exception $e) {
+        echo $e->getMessage();
     }
 
 }
 
 // On boucle sur les liaisons établissement et thèse pour les ajouter à la base
-$insertLiaisonEtablissementStmt = $conn->prepare("INSERT INTO these_etablissement(id_these,id_etablissement) VALUES(?,?)");
+$insertLiaisonEtablissementStmt = $conn->prepare("INSERT INTO these_etablissement(nnt,id_etablissement) VALUES(?,?)");
 foreach ($liaison_etablissement as $liaison) {
+    try{
     $insertLiaisonEtablissementStmt->execute(array($liaison["id_these"], $liaison["id_etablissement"]));
+    }catch (Exception $e) {
+        echo $e->getMessage();
+    }
 }
 
 //On boucle sur le couple nnt, sujet pour les ajouter à la base
-foreach($liaison_sujets as $liaison){
-    $insertLiaisonSujetStmt = $conn->prepare("INSERT INTO mots_cle(nnt,idMot) VALUES(?,?)");
-    $id = $id_sujets[strval($liaison["sujet"])];
-    $insertLiaisonSujetStmt->execute(array($liaison["nnt"],$id));
+foreach($liaison_sujets as $nnt => $liste){
+    foreach($liste as $sujet){
+        $insertLiaisonSujetStmt = $conn->prepare("INSERT INTO mots_cle(nnt,idMot) VALUES(?,?)");
+        $id = $conn->prepare("SELECT idMot FROM liste_mots_cles WHERE mot = ?");
+        $id->execute(array($sujet));
+        $id = $id->fetch()[0];
+
+        $insertLiaisonSujetStmt->execute(array($nnt,$id));
+    }
 }
