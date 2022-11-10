@@ -118,17 +118,17 @@ class These
     {
         return $this->liste_etablissements;
     }
-     
-        /**
+
+    /**
      * Renvoie le NNT de la thèse
      * @param string $nnt NNT de la thèse
      * @return string
      */
-    public function getNnt() : string
+    public function getNnt(): string
     {
         return $this->nnt;
     }
-    
+
 
 
     /**
@@ -299,6 +299,9 @@ class These
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($result == null) {
+            return array("id" => -1, "mot" => "Aucun mot clé");
+        }
         return $result;
     }
 
@@ -309,13 +312,13 @@ class These
      */
     function getEtablissement($conn): string
     {
-        
+
         $sql = "SELECT nom FROM etablissement,these_etablissement WHERE nnt = :nnt AND etablissement.id = these_etablissement.id_etablissement LIMIT 1";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($result == null){
+        if ($result == null) {
             return "Inconnu";
         }
         return $result["nom"];
