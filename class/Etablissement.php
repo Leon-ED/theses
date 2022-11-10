@@ -73,6 +73,7 @@ class Etablissement
             $this->bddID = $conn->lastInsertId();
         } catch (PDOException $e) {
             echo "Erreur insertion etablissement $this->name : $this->idRef";
+            echo $e->getMessage();
         }
     }
 
