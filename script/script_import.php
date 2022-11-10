@@ -17,7 +17,7 @@ $i = 0;
 
 
 $sujets = array(); //Liste de tous les sujets
-$etablissements_soutenance = array(); // Liste de tous les établissements de soutenance
+$etablissements_soutenance = Etablissement::getEtablissementListFromDB($conn); // Liste de tous les établissements de soutenance
 $personnes = array(); //Liste de toutes les personnes
 $liaison_etablissement = array(); //Liste de toutes les liaisons entre établissement et thèse
 $liaison_sujets = array();

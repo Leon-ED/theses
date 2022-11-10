@@ -15,14 +15,15 @@ class Etablissement
         if (!($etablissementOBJ instanceof Etablissement)) {
             throw new InvalidArgumentException("Le premier paramètre doit être un objet de type Etablissement");
         }
-        foreach ($listeEtablissement as $etablissement) {
-            if ($etablissementOBJ->getIdRef() == null) {
-                if ($etablissement->getName() == $etablissementOBJ->getName()) {
+        if ($etablissementOBJ->getIdRef() == null) {
+            foreach ($listeEtablissement as $etablissement) {
+                if ($etablissement->getNom() == $etablissementOBJ->getName()) {
                     return $etablissement;
                 }
-            } else {
-
-                if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && strcmp($etablissement->getName(), $etablissementOBJ->getName()) == 0) {
+            }
+        } else {
+            foreach ($listeEtablissement as $etablissement) {
+                if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && $etablissement->getIdRef() == $etablissementOBJ->getIdRef()) {
                     return $etablissement;
                 }
             }
@@ -30,6 +31,29 @@ class Etablissement
         return null;
     }
 
+    /**
+     * Renvoie la liste des établissements présents dans la base de données
+     * @param PDO $conn La connexion à la base de données
+     * @return array La liste des établissements
+     */
+    public static function getEtablissementListFromDB($conn)
+    {
+        $sql = "SELECT * FROM etablissement";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $etablissementList = array();
+        foreach ($result as $etablissement) {
+            $etabliseementOBJ = new Etablissement();
+            $etabliseementOBJ
+                ->setBddID($etablissement['id'])
+                ->setNom($etablissement['nom'])
+                ->setIdRef($etablissement['idRef']);
+
+            $etablissementList[] = $etabliseementOBJ;
+        }
+        return $etablissementList;
+    }
     private $name;
     private $idRef;
     private $bddID;
