@@ -41,7 +41,7 @@ class Etablissement
     /**
      * Mets le nom de l'établissement
      * @param string $name Nom de l'établissement
-     * @return int id base de l'établissement
+     * @return void
      */
     function insertEtablissement($conn)
     {
@@ -52,11 +52,9 @@ class Etablissement
                 ":name" => $this->name,
                 ":idRef" => $this->idRef
             ));
-
-            return $conn->lastInsertId();
+            $this->bddID = $conn->lastInsertId();
         } catch (PDOException $e) {
-            echo $e->getMessage();
-            return -1;
+            echo "Erreur insertion etablissement $this->name : $this->idRef";
         }
     }
 
