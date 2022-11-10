@@ -22,13 +22,18 @@ function getSearchResults(): array
     $recherche = $_GET["search"];
     // On fait la recherche sur les titres, la discipline,les mots-clés et l'auteur
     $sql = "
-    SELECT DISTINCT these.idThese, these.nnt FROM these,a_ecrit,personne,mots_cle,liste_mots_cles
+    SELECT DISTINCT these.idThese, these.nnt FROM these
     WHERE titre_fr LIKE :recherche
     OR titre_en LIKE :recherche
     OR discipline LIKE :recherche
     OR these.nnt LIKE :recherche
-    OR (a_ecrit.nnt = these.nnt AND personne.idPersonne = a_ecrit.idPersonne AND (personne.nomPersonne LIKE :recherche OR personne.prenomPersonne LIKE :recherche OR CONCAT(personne.prenomPersonne, ' ', personne.nomPersonne) LIKE :recherche))
+    
 ";
+// OR (a_ecrit.nnt = these.nnt AND personne.idPersonne = a_ecrit.idPersonne AND (personne.nomPersonne LIKE :recherche OR personne.prenomPersonne LIKE :recherche OR CONCAT(personne.prenomPersonne, ' ', personne.nomPersonne) LIKE :recherche))
+// ^^ provoque un ralentissement de la recherche 
+
+
+
     // On exécute la requête
     $recherche_these = $conn->prepare($sql);
     $recherche_these->execute(array(
