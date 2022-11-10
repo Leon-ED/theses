@@ -129,6 +129,7 @@ foreach ($data as $these) {
         }
     } catch (Exception $e) {
         echo $e->getMessage();
+        print_r($conn->errorInfo());
         die;
     }
 }
