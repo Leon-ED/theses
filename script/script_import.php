@@ -102,6 +102,9 @@ foreach ($data as $these) {
         //On boucle sur les établissements de soutenance
         foreach ($these["etablissements_soutenance"] as $etablissement) {
             // On créé l'objet établissement et on lui mets ses champs
+            if ($etablissement["idref"] == null) {
+                $etablissement["idref"] = "undef";
+            }
             $etablissementOBJ = new Etablissement();
             $etablissementOBJ
                 ->setNom($etablissement["nom"])

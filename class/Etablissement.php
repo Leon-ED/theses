@@ -79,16 +79,8 @@ class Etablissement
             ));
             $this->bddID = $conn->lastInsertId();
         } catch (PDOException $e) {
-            $sql = "SELECT id FROM etablissement WHERE nom = :name AND idRef = :idRef";
-            $selectEtablissement = $conn->prepare($sql);
-            $selectEtablissement->execute(array(
-                ":name" => $this->name,
-                ":idRef" => $this->idRef
-            ));
-            $result = $selectEtablissement->fetch(PDO::FETCH_ASSOC);
-            $this->bddID = $result['id'];
+            echo "Erreur insertion etablissement $this->name : $this->idRef";
         }
-        echo "Erreur insertion etablissement $this->name : $this->idRef";
     }
 
     /**
