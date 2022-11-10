@@ -7,7 +7,7 @@ class Etablissement
      * Retourne true si l'établissement founit est déjà dans la liste donnée
      * @param Etablissement $etabliseementOBJ L'établissement à chercher
      * @param array $listeEtablissement La liste d'établissement
-     * @return bool
+     * @return Etablissement|null Retourne l'établissement trouvé ou null si il n'est pas trouvé
      * @throws InvalidArgumentException Si l'un des paramètres n'est pas du bon type
      */
     public static function etablissement_in_array($etablissementOBJ, $listeEtablissement)
@@ -18,16 +18,16 @@ class Etablissement
         foreach ($listeEtablissement as $etablissement) {
             if ($etablissementOBJ->getIdRef() == null) {
                 if ($etablissement->getName() == $etablissementOBJ->getName()) {
-                    return true;
+                    return $etablissement;
                 }
             } else {
 
                 if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && strcmp($etablissement->getName(), $etablissementOBJ->getName()) == 0) {
-                    return true;
+                    return $etablissement;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     private $name;
