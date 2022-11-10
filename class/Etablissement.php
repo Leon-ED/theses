@@ -12,15 +12,15 @@ class Etablissement
      */
     public static function etablissement_in_array($etablissementOBJ, $listeEtablissement)
     {
-        if (!( $etablissementOBJ instanceof Etablissement)) {
+        if (!($etablissementOBJ instanceof Etablissement)) {
             throw new InvalidArgumentException("Le premier paramètre doit être un objet de type Etablissement");
         }
         foreach ($listeEtablissement as $etablissement) {
-            if($etablissementOBJ->getIdRef() == null) {
+            if ($etablissementOBJ->getIdRef() == null) {
                 if ($etablissement->getName() == $etablissementOBJ->getName()) {
                     return true;
                 }
-            }else{
+            } else {
 
                 if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && strcmp($etablissement->getName(), $etablissementOBJ->getName()) == 0) {
                     return true;
