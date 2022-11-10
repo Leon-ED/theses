@@ -4,6 +4,9 @@ if (PHP_SESSION_NONE === session_status()) {
 }
 // error_reporting(E_ERROR | E_PARSE);
 // phpinfo();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once("../config/base.php");
 require_once("../class/these.php");
 require_once("../class/personne.php");

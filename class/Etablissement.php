@@ -7,22 +7,47 @@ class Etablissement
      * Retourne true si l'établissement founit est déjà dans la liste donnée
      * @param Etablissement $etabliseementOBJ L'établissement à chercher
      * @param array $listeEtablissement La liste d'établissement
-     * @return bool
+     * @return Etablissement|null Retourne l'établissement trouvé ou null si il n'est pas trouvé
      * @throws InvalidArgumentException Si l'un des paramètres n'est pas du bon type
      */
     public static function etablissement_in_array($etablissementOBJ, $listeEtablissement)
     {
-        if (!is_a($etablissementOBJ, "Etablissement")) {
+        if (!($etablissementOBJ instanceof Etablissement)) {
             throw new InvalidArgumentException("Le premier paramètre doit être un objet de type Etablissement");
         }
+
         foreach ($listeEtablissement as $etablissement) {
-            if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && strcmp($etablissement->getName(), $etablissementOBJ->getName()) == 0) {
-                return true;
+            if ($etablissementOBJ->equals($etablissement)) {
+                return $etablissement;
             }
         }
-        return false;
+
+        return null;
     }
 
+    /**
+     * Renvoie la liste des établissements présents dans la base de données
+     * @param PDO $conn La connexion à la base de données
+     * @return array La liste des établissements
+     */
+    public static function getEtablissementListFromDB($conn)
+    {
+        $sql = "SELECT * FROM etablissement";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $etablissementList = array();
+        foreach ($result as $etablissement) {
+            $etabliseementOBJ = new Etablissement();
+            $etabliseementOBJ
+                ->setBddID($etablissement['id'])
+                ->setNom($etablissement['nom'])
+                ->setIdRef($etablissement['idRef']);
+
+            $etablissementList[] = $etabliseementOBJ;
+        }
+        return $etablissementList;
+    }
     private $name;
     private $idRef;
     private $bddID;
@@ -34,7 +59,7 @@ class Etablissement
     /**
      * Mets le nom de l'établissement
      * @param string $name Nom de l'établissement
-     * @return int id base de l'établissement
+     * @return void
      */
     function insertEtablissement($conn)
     {
@@ -45,10 +70,10 @@ class Etablissement
                 ":name" => $this->name,
                 ":idRef" => $this->idRef
             ));
-
-            return $conn->lastInsertId();
+            $this->bddID = $conn->lastInsertId();
         } catch (PDOException $e) {
-            return -1;
+            echo "Erreur insertion etablissement $this->name : $this->idRef";
+            echo $e->getMessage();
         }
     }
 
@@ -111,5 +136,12 @@ class Etablissement
     {
         $this->bddID = $bddID;
         return $this;
+    }
+
+
+    public function equals(Etablissement $etablissement)
+    {
+        return $this->idRef == $etablissement->getIdRef() ||
+            $this->name == $etablissement->getName();
     }
 }

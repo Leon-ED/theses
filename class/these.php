@@ -20,12 +20,14 @@ class These
     private  $langueThese;
     private $nnt;
     private $iddoc;
+    private $liste_etablissements;
 
 
 
 
     public function __construct()
     {
+        $this->liste_etablissements = array();
     }
 
     /**
@@ -100,17 +102,33 @@ class These
         return $this;
     }
 
+    /**
+     * Ajoute un établissement à la liste des établissements de la thèse
+     * @param Etablissement $etablissement Etablissement à ajouter
+     * @return these
+     * 
+     */
+    public function addEtablissement(Etablissement $etablissement)
+    {
+        $this->liste_etablissements[] = $etablissement;
+        return $this;
+    }
 
-        /**
+    public function getEtablissements()
+    {
+        return $this->liste_etablissements;
+    }
+
+    /**
      * Renvoie le NNT de la thèse
      * @param string $nnt NNT de la thèse
      * @return string
      */
-    public function getNnt() : string
+    public function getNnt(): string
     {
         return $this->nnt;
     }
-    
+
 
 
     /**
@@ -162,7 +180,7 @@ class These
         $this->setDiscipline($result["discipline"]);
         $this->setSoutenue($result["estSoutenue"]);
         $this->setAccessible($result["estAccessible"]);
-        $this->setLangueThese($result["langueThese"]);
+        $this->setLangueThese($result["langue"]);
         $this->setIddoc($result["iddoc"]);
 
 
@@ -272,15 +290,37 @@ class These
     /**
      * Retourne la liste des mots clés de la thèse
      * @param PDO $conn Connexion à la base de données
-     * @return array Liste des mots clés de la thèse
+     * @return array|string Liste des mots clés de la thèse ou un message d'erreur
      */
-    function getMotsCles($conn): array
+    function getMotsCles($conn): array|string
     {
-        $sql = "SELECT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
+        $sql = "SELECT DISTINCT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($result == null) {
+            return "Aucun mot clé";
+        }
         return $result;
+    }
+
+    /**
+     * Retourne l'établissement d'origine de la thèse
+     * @param PDO $conn Connexion à la base de données
+     * @return string Etablissement d'origine de la thèse
+     */
+    function getEtablissement($conn): string
+    {
+
+        $sql = "SELECT nom FROM etablissement,these_etablissement WHERE nnt = :nnt AND etablissement.id = these_etablissement.id_etablissement LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":nnt", $this->nnt);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result == null) {
+            return "Inconnu";
+        }
+        return $result["nom"];
     }
 }

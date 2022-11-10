@@ -28,26 +28,27 @@ function echoThese(array $listeThese): void
             throw new Exception("Cette thèse n'est pas un objet thèse.");
         }
 ?>
-            <div class="these-card">
-                <div class="these-card-header">
-                    <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= $these->getTitre(); ?></a></h2>
-                    <div class="these-card-infos">
-                        <p>par <span class="these-card-author"><a href="#"><span><?= $these->getAuteur($conn); ?></span></a></p>
-                        <p>le : <span class="these-card-date"><?= $these->getDateSoutenance() ?></span></p>
-                    </div>
-                </div>
-                <div class="these-card-body">
-                    <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
-                    <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
-
+        <div class="these-card">
+            <div class="these-card-header">
+                <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= $these->getTitre(); ?></a></h2>
+                <div class="these-card-infos">
+                    <p>par <span class="these-card-author"><a href="#"><span><?= $these->getAuteur($conn); ?></span></a></p>
+                    <p>le : <span class="these-card-date"><?= $these->getDateSoutenance() ?></span></p>
                 </div>
             </div>
+            <div class="these-card-body">
+                <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
+                <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
+                <p>Établissement : <a href="#"><?= $these->getEtablissement($conn) ?></a> </p>
+                <p>Mots-clés: <?php echoTheseMotsCles($these) ?> </p>
+            </div>
+        </div>
 
 
-    <?php
+<?php
     }
 }
-//                     <p>Mots-clés: <?php echoTheseMotsCles($these) </p>
+//                     
 
 /**
  * Affiche le code HTML des mots-clés d'une thèse
@@ -56,12 +57,18 @@ function echoThese(array $listeThese): void
  */
 function echoTheseMotsCles(These $these): void
 {
-    
+
     global $conn;
     $str = "";
     $liste_mots = $these->getMotsCles($conn);
-    foreach ($liste_mots as $motCle) {
-        $str = $str . "<a href='?mc=$motCle[idMot]'><span>$motCle[mot]</span></a> , ";
+    if (is_string($liste_mots)) {
+        echo $liste_mots;
+        return;
     }
-    substr($str, 0, -2);
+    foreach ($liste_mots as $motCle) {
+        $str = $str . "<a href='?mc=$motCle[id]'><span>$motCle[mot]</span></a> , ";
+    }
+    // Supprime la dernière virgule
+    $str = substr($str, 0, -2);
+    echo $str;
 }
