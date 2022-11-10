@@ -12,12 +12,19 @@ class Etablissement
      */
     public static function etablissement_in_array($etablissementOBJ, $listeEtablissement)
     {
-        if (!is_a($etablissementOBJ, "Etablissement")) {
+        if (!( $etablissementOBJ instanceof Etablissement)) {
             throw new InvalidArgumentException("Le premier paramètre doit être un objet de type Etablissement");
         }
         foreach ($listeEtablissement as $etablissement) {
-            if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && strcmp($etablissement->getName(), $etablissementOBJ->getName()) == 0) {
-                return true;
+            if($etablissementOBJ->getIdRef() == null) {
+                if ($etablissement->getName() == $etablissementOBJ->getName()) {
+                    return true;
+                }
+            }else{
+
+                if ($etablissement->getIdRef() == $etablissementOBJ->getIdRef() && strcmp($etablissement->getName(), $etablissementOBJ->getName()) == 0) {
+                    return true;
+                }
             }
         }
         return false;
@@ -48,6 +55,7 @@ class Etablissement
 
             return $conn->lastInsertId();
         } catch (PDOException $e) {
+            echo $e->getMessage();
             return -1;
         }
     }

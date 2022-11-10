@@ -39,6 +39,7 @@ function echoThese(array $listeThese): void
                 <div class="these-card-body">
                     <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
                     <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
+                    <p>Établissement : <a href="#"><?= $these->getEtablissement($conn) ?></a> </p>
 
                 </div>
             </div>

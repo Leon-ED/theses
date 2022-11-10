@@ -20,12 +20,14 @@ class These
     private  $langueThese;
     private $nnt;
     private $iddoc;
+    private $liste_etablissements;
 
 
 
 
     public function __construct()
     {
+        $this->liste_etablissements = array();
     }
 
     /**
@@ -100,7 +102,23 @@ class These
         return $this;
     }
 
+    /**
+     * Ajoute un établissement à la liste des établissements de la thèse
+     * @param Etablissement $etablissement Etablissement à ajouter
+     * @return these
+     * 
+     */
+    public function addEtablissement(Etablissement $etablissement)
+    {
+        $this->liste_etablissements[] = $etablissement;
+        return $this;
+    }
 
+    public function getEtablissements()
+    {
+        return $this->liste_etablissements;
+    }
+     
         /**
      * Renvoie le NNT de la thèse
      * @param string $nnt NNT de la thèse
@@ -162,7 +180,7 @@ class These
         $this->setDiscipline($result["discipline"]);
         $this->setSoutenue($result["estSoutenue"]);
         $this->setAccessible($result["estAccessible"]);
-        $this->setLangueThese($result["langueThese"]);
+        $this->setLangueThese($result["langue"]);
         $this->setIddoc($result["iddoc"]);
 
 
@@ -282,5 +300,24 @@ class These
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
+    }
+
+    /**
+     * Retourne l'établissement d'origine de la thèse
+     * @param PDO $conn Connexion à la base de données
+     * @return string Etablissement d'origine de la thèse
+     */
+    function getEtablissement($conn): string
+    {
+        
+        $sql = "SELECT nom FROM etablissement,these_etablissement WHERE nnt = :nnt AND etablissement.id = these_etablissement.id_etablissement LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":nnt", $this->nnt);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($result == null){
+            return "Inconnu";
+        }
+        return $result["nom"];
     }
 }

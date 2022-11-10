@@ -6,7 +6,7 @@ $nombre_theses = $stats['nombre_theses'];
 $nombre_etablissements = $stats['nombre_etablissements'];
 $nombre_directeurs = $stats['nombre_directeurs'];
 $nombre_auteurs = $stats['nombre_auteurs'];
-
+$bootstrap_alert = "";
 if (isset($_GET['msg'])) {
     $msg = htmlspecialchars($_GET['msg']);
     $bootstrap_alert = '
