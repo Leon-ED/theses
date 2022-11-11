@@ -15,10 +15,9 @@ $allNnts = getAllNnt($conn);
 
 $i = 0;
 
-
 $sujets = array(); //Liste de tous les sujets
 $etablissements_soutenance = Etablissement::getEtablissementListFromDB($conn); // Liste de tous les établissements de soutenance
-$personnes = array(); //Liste de toutes les personnes
+$liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les personnes
 $liaison_etablissement = array(); //Liste de toutes les liaisons entre établissement et thèse
 $liaison_sujets = array();
 foreach ($data as $these) {
@@ -26,9 +25,9 @@ foreach ($data as $these) {
 
     // En local pour tester sans importer toute la data.
     $i++;
-    // if($i >= 20){
-    //     break;
-    // }
+    if ($i >= 20) {
+        break;
+    }
 
     // On vérifie que la thèse n'est pas déjà présente dans la base de données
     if (in_array($these['nnt'], $allNnts)) {
@@ -63,8 +62,8 @@ foreach ($data as $these) {
     }
 
     // On crée un objet thèse et on lui mets ses champs
-    $theseObj = new These();
-    $theseObj
+    $theseOBJ = new These();
+    $theseOBJ
         ->setTitre($titre["fr"], $titre["en"])
         ->setResume($resume["fr"], $resume["en"])
         ->setAuteur($auteur["nom"], $auteur["prenom"])
@@ -78,25 +77,50 @@ foreach ($data as $these) {
 
 
     // On insère la thèse dans la BDD et on récupère son internal ID.
-    $theseObj->setTheseId($theseObj->insertThese($conn));
+    $theseOBJ->setTheseId($theseOBJ->insertThese($conn));
 
     // On ajoute le nnt de la thèse dans la liste des personnes pour y mettre l'auteur et le/s directeur/s
     $personnes[strval($nnt)] = array();
     $personnes[strval($nnt)]["id"] = $nnt;
 
 
-    // On créer la liste des auteurs et directeurs
-    $directeursTheses = array();
-    $personnes[strval($nnt)]["directeurs_these"] = array();
-    $personnes[strval($nnt)]["auteurs"] = array();
 
-    // On boucle sur chaque directeur et auteur de la thèse pour les ajouter dans les listes correspondantes
-    foreach ($these["directeurs_these"] as $directeur) {
-        array_push($personnes[strval($nnt)]["directeurs_these"], $directeur);
-    }
+    // On boucle sur chaque Auteur de la thèse
     foreach ($these["auteurs"] as $auteur) {
-        array_push($personnes[strval($nnt)]["auteurs"], $auteur);
+        $personneOBJ = new Personne();
+        $personneOBJ
+            ->setNom($auteur["nom"])
+            ->setPrenom($auteur["prenom"])
+            ->setIdRef($auteur["idref"]);
+        $resultat = Personne::checkInArray($personneOBJ, $liste_personnes); // On regarde si on l'a déjà dans la liste des personnes
+        if ($resultat == null) {
+            // Si on l'a pas on l'ajoute à la liste des personnes et à la base
+            $personneOBJ->insertToBase($conn);
+            $liste_personnes[] = $personneOBJ;
+            $resultat = $personneOBJ;
+            //Dans tous les cas on le lien entre la thèse et l'auteur
+            $resultat->insertAuteur($conn, $theseOBJ->getNNT());
+        }
     }
+
+    // On boucle sur chaque Directeur de la thèse
+    foreach ($these["directeurs_these"] as $directeur) {
+        $personneOBJ = new Personne();
+        $personneOBJ
+            ->setNom($directeur["nom"])
+            ->setPrenom($directeur["prenom"])
+            ->setIdRef($directeur["idref"]);
+        $resultat = Personne::checkInArray($personneOBJ, $liste_personnes); // On regarde si on l'a déjà dans la liste des personnes
+        if ($resultat == null) {
+            // Si on l'a pas on l'ajoute à la liste des personnes et à la base
+            $personneOBJ->insertToBase($conn);
+            $liste_personnes[] = $personneOBJ;
+            $resultat = $personneOBJ;
+            //Dans tous les cas on le lien entre la thèse et le directeur
+            $resultat->insertDirecteur($conn, $theseOBJ->getNNT());
+        }
+    }
+    unset($liste_personnes);
 
 
     //On boucle sur les établissements de soutenance
@@ -112,7 +136,6 @@ foreach ($data as $these) {
 
         //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
         $resultat = Etablissement::etablissement_in_array($etablissementOBJ, $etablissements_soutenance);
-        print_r($resultat);
 
         // Si le résultat est null, c'est que l'établissement n'est pas dans la liste
         if ($resultat == null) {
@@ -124,52 +147,12 @@ foreach ($data as $these) {
             unset($etablissementOBJ); // On supprime l'objet établissement
             $etablissementOBJ = $resultat; // On récupère le bon établissement
         }
-        $theseObj->addEtablissement($etablissementOBJ); // On ajoute l'établissement à la thèse
-        addLiaisonEtablissement($theseObj, $conn); // On fait le lien entre la thèse et l'établissement
+        $theseOBJ->addEtablissement($etablissementOBJ); // On ajoute l'établissement à la thèse
+        addLiaisonEtablissement($theseOBJ, $conn); // On fait le lien entre la thèse et l'établissement
     }
 }
 
-// On boucle sur les directeurs et les auteurs afin de les ajouter à la base
-$directeurs = array();
-$auteurs = array();
-foreach ($personnes as $nnt) {
-    foreach ($nnt["directeurs_these"] as $directeur) {
-
-
-        try {
-            $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
-            $insertPersonneStmt->execute(array($directeur["nom"], $directeur["prenom"], $directeur["idref"]));
-            $bddID = $conn->lastInsertId();
-            array_push($directeurs, array("id" => $bddID, "nnt" => $nnt["id"]));
-        } catch (Exception $e) {
-            echo $e->getMessage() . "<br><br>";
-        }
-    }
-    foreach ($nnt["auteurs"] as $auteur) {
-        try {
-            $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
-            $insertPersonneStmt->execute(array($auteur["nom"], $auteur["prenom"], $auteur["idref"]));
-            $bddID = $conn->lastInsertId();
-            array_push($auteurs, array("id" => $bddID, "nnt" => $nnt["id"]));
-        } catch (Exception $e) {
-            echo $e->getMessage() . "<br><br>";
-        }
-    }
-}
-
-// On boucle sur chaque directeur et auteur pour les lier à la thèse qu'ils ont dirigé et/ou écrit
-foreach ($directeurs as $directeur) {
-    try {
-        $insertDirecteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");
-        $insertDirecteurStmt->execute(array($directeur["id"], $directeur["nnt"]));
-    } catch (Exception $e) {
-        echo $e->getMessage() . "<br><br>";
-    }
-}
-foreach ($auteurs as $auteur) {
-    $insertDirecteurStmt = $conn->prepare("INSERT INTO a_ecrit(idPersonne,nnt) VALUES(?,?)");
-    $insertDirecteurStmt->execute(array($auteur["id"], $auteur["nnt"]));
-}
+die;
 
 // On ajoute les mots clés dans la base de données puis ont mets leur ID dans le tableau
 $id_sujets = array();

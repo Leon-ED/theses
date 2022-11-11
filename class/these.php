@@ -124,7 +124,7 @@ class These
      * @param string $nnt NNT de la thèse
      * @return string
      */
-    public function getNnt(): string
+    public function getNNT(): string
     {
         return $this->nnt;
     }
