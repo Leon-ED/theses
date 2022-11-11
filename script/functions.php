@@ -52,8 +52,8 @@ function addLiaisonEtablissement(These $these, PDO $conn)
     $liste_etablissements = $these->getEtablissements();
     $sql = "INSERT INTO these_etablissement (nnt, id_etablissement) VALUES (:nnt, :id_etablissement);";
     $stmt = $conn->prepare($sql);
-    foreach ($liste_etablissements as $etablissemntObj) {
-        $id = $etablissemntObj->getBddID();
+    foreach ($liste_etablissements as $etablissementOBJ) {
+        $id = $etablissementOBJ->getIdBase();
         $stmt->execute(array(":nnt" => $nnt, ":id_etablissement" => $id));
     }
 }

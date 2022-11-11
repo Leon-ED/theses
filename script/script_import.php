@@ -16,7 +16,7 @@ $allNnts = getAllNnt($conn);
 $i = 0;
 
 $sujets = array(); //Liste de tous les sujets
-$etablissements_soutenance = Etablissement::getEtablissementListFromDB($conn); // Liste de tous les établissements de soutenance
+$etablissements_soutenance = Etablissement::getListFromBase($conn); // Liste de tous les établissements de soutenance
 $liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les personnes
 $liaison_etablissement = array(); //Liste de toutes les liaisons entre établissement et thèse
 $liaison_sujets = array();
@@ -126,21 +126,18 @@ foreach ($data as $these) {
     //On boucle sur les établissements de soutenance
     foreach ($these["etablissements_soutenance"] as $etablissement) {
         // On créé l'objet établissement et on lui mets ses champs
-        if ($etablissement["idref"] == null) {
-            $etablissement["idref"] = "undef";
-        }
         $etablissementOBJ = new Etablissement();
         $etablissementOBJ
             ->setNom($etablissement["nom"])
             ->setIdRef($etablissement["idref"]);
 
         //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
-        $resultat = Etablissement::etablissement_in_array($etablissementOBJ, $etablissements_soutenance);
+        $resultat = Etablissement::checkInArray($etablissementOBJ, $etablissements_soutenance);
 
         // Si le résultat est null, c'est que l'établissement n'est pas dans la liste
         if ($resultat == null) {
             $etablissements_soutenance[] = $etablissementOBJ; // On ajoute l'établissement à la liste
-            $etablissementOBJ->insertEtablissement($conn); // On insère l'établissement dans la base;
+            $etablissementOBJ->insertToBase($conn); // On insère l'établissement dans la base;
 
 
         } else {  //Il y a un résultat on le récupère donc
@@ -167,15 +164,6 @@ foreach ($sujets as $sujet) {
     }
 }
 
-// On boucle sur les liaisons établissement et thèse pour les ajouter à la base
-$insertLiaisonEtablissementStmt = $conn->prepare("INSERT INTO these_etablissement(nnt,id_etablissement) VALUES(?,?)");
-foreach ($liaison_etablissement as $liaison) {
-    try {
-        $insertLiaisonEtablissementStmt->execute(array($liaison["id_these"], $liaison["id_etablissement"]));
-    } catch (Exception $e) {
-        echo $e->getMessage() . "<br><br>" . "<br>";
-    }
-}
 
 //On boucle sur le couple nnt, sujet pour les ajouter à la base
 foreach ($liaison_sujets as $nnt => $liste) {

@@ -88,18 +88,17 @@ class Personne extends AbstractObjet
 
     /**
      * Vérifie si deux objets sont identiques
-     * @param Personne $personne La personne à comparer
+     * @param Object $obj
      * @return bool
      */
-
-    public function equals($personne)
+    public function equals($obj)
     {
-        if (!($personne instanceof Personne)) {
+        if (!($obj instanceof Personne)) {
             return false;
         }
-        if (parent::getIdBase() == $personne->getIdBase())
+        if (parent::getIdBase() == $obj->getIdBase())
             return true;
-        return $this->nom == $personne->getNom() && $this->prenom == $personne->getPrenom() && parent::getIdRef() == $personne->getIdRef();
+        return $this->nom == $obj->getNom() && $this->prenom == $obj->getPrenom() && parent::getIdRef() == $obj->getIdRef();
     }
 
     /**
