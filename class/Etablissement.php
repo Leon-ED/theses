@@ -1,6 +1,6 @@
 <?php
 
-class Etablissement
+class Etablissement extends AbstractObjet
 {
 
     /**
@@ -10,7 +10,7 @@ class Etablissement
      * @return Etablissement|null Retourne l'établissement trouvé ou null si il n'est pas trouvé
      * @throws InvalidArgumentException Si l'un des paramètres n'est pas du bon type
      */
-    public static function etablissement_in_array($etablissementOBJ, $listeEtablissement)
+    public static function checkInArray($etablissementOBJ, $listeEtablissement)
     {
         if (!($etablissementOBJ instanceof Etablissement)) {
             throw new InvalidArgumentException("Le premier paramètre doit être un objet de type Etablissement");
@@ -30,7 +30,7 @@ class Etablissement
      * @param PDO $conn La connexion à la base de données
      * @return array La liste des établissements
      */
-    public static function getEtablissementListFromDB($conn)
+    public static function getListFromBase($conn)
     {
         $sql = "SELECT * FROM etablissement";
         $stmt = $conn->prepare($sql);
@@ -40,17 +40,17 @@ class Etablissement
         foreach ($result as $etablissement) {
             $etabliseementOBJ = new Etablissement();
             $etabliseementOBJ
-                ->setBddID($etablissement['id'])
                 ->setNom($etablissement['nom'])
+                ->setIdBase($etablissement['id'])
                 ->setIdRef($etablissement['idRef']);
 
             $etablissementList[] = $etabliseementOBJ;
         }
         return $etablissementList;
     }
+
+
     private $name;
-    private $idRef;
-    private $bddID;
 
     public function __construct()
     {
@@ -61,20 +61,41 @@ class Etablissement
      * @param string $name Nom de l'établissement
      * @return void
      */
-    function insertEtablissement($conn)
+    function insertToBase($conn)
     {
         try {
             $sql = "INSERT INTO etablissement (nom,idRef) VALUES (:name,:idRef);";
             $insertEtablissement = $conn->prepare($sql);
             $insertEtablissement->execute(array(
                 ":name" => $this->name,
-                ":idRef" => $this->idRef
+                ":idRef" => $this->getIdRef()
             ));
-            $this->bddID = $conn->lastInsertId();
+            $this->setIdBase($conn->lastInsertId());
         } catch (PDOException $e) {
             echo "Erreur insertion etablissement $this->name : $this->idRef";
             echo $e->getMessage();
         }
+    }
+
+    /**
+     * Mets à jour  un établissement dans la base de données
+     * @param PDO $conn La connexion à la base de données
+     * @return void
+     */
+    public function updateToBase($conn)
+    {
+        if (parent::getIdRef() == null) {
+            $UpdateEtablissementStmt = $conn->prepare("UPDATE etablissement SET nom= :nom WHERE nom= :nom AND idRef IS NULL");
+            $UpdateEtablissementStmt->execute(array(
+                ":nom" => $this->nom,
+            ));
+            return;
+        }
+        $UpdateEtablissementStmt = $conn->prepare("UPDATE etablissement SET nom= :nom WHERE nom= :nom AND idRef = ?");
+        $UpdateEtablissementStmt->execute(array(
+            ":nom" => $this->nom,
+            ":idRef" => $this->idRef
+        ));
     }
 
     /**
@@ -88,16 +109,7 @@ class Etablissement
         return $this;
     }
 
-    /**
-     * Mets l'idRef de l'établissement
-     * @param string $idRef IdRef de l'établissement
-     * @return etablissement
-     */
-    public function setIdRef($idRef)
-    {
-        $this->idRef = $idRef;
-        return $this;
-    }
+
 
     /**
      * Récupère le nom de l'établissement
@@ -108,40 +120,19 @@ class Etablissement
         return $this->name;
     }
 
-    /**
-     * Récupère l'idRef de l'établissement
-     * @return string
-     */
-    public function getIdRef()
-    {
-        return $this->idRef;
-    }
+
 
 
     /**
-     * Récupère l'id de l'établissement dans la base de données
-     * @return int
+     * Vérifie si deux objets sont identiques
+     * @param Object $obj
+     * @return bool
      */
-    public function getBddID()
+    public function equals($obj)
     {
-        return $this->bddID;
-    }
-
-    /**
-     * Mets l'id de l'établissement de la base de données
-     * @param int $bddID Id de l'établissement dans la base de données
-     * @return etablissement
-     */
-    public function setBddID($bddID)
-    {
-        $this->bddID = $bddID;
-        return $this;
-    }
-
-
-    public function equals(Etablissement $etablissement)
-    {
-        return $this->idRef == $etablissement->getIdRef() ||
-            $this->name == $etablissement->getName();
+        if (!($obj instanceof Etablissement)) {
+            return false;
+        }
+        return parent::getIdRef() == $obj->getIdRef() || strcasecmp($this->name, $obj->getName()) == 0;
     }
 }

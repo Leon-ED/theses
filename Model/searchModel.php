@@ -14,10 +14,15 @@ function getSearchResults(): array
 
 
     //On vérifie que le formulaire a bien été envoyé
-    if (!isset($_GET["search"]) || empty($_GET["search"])) {
-        header("Location: ../view/index.php?msg=" . urlencode("Veuillez ne pas faire une recherche vide."));
+    if (!isset($_GET) || empty($_GET)) {
+        header("Location: ../view/index.ph");
         exit();
     }
+
+    // if (isset($_GET["dir"]) || isset($_GET["etab"]) || isset($_GET["aut"]) || isset($_GET["mc"])) {
+    //     return getResultAvances();
+    // }
+
 
     $recherche = $_GET["search"];
     // On fait la recherche sur les titres, la discipline,les mots-clés et l'auteur
@@ -29,8 +34,8 @@ function getSearchResults(): array
     OR these.nnt LIKE :recherche
     
 ";
-// OR (a_ecrit.nnt = these.nnt AND personne.idPersonne = a_ecrit.idPersonne AND (personne.nomPersonne LIKE :recherche OR personne.prenomPersonne LIKE :recherche OR CONCAT(personne.prenomPersonne, ' ', personne.nomPersonne) LIKE :recherche))
-// ^^ provoque un ralentissement de la recherche 
+    // OR (a_ecrit.nnt = these.nnt AND personne.idPersonne = a_ecrit.idPersonne AND (personne.nomPersonne LIKE :recherche OR personne.prenomPersonne LIKE :recherche OR CONCAT(personne.prenomPersonne, ' ', personne.nomPersonne) LIKE :recherche))
+    // ^^ provoque un ralentissement de la recherche 
 
 
 
@@ -44,7 +49,7 @@ function getSearchResults(): array
 
     // Si elle n'a rien donné on renvoie vers la page d'accueil avec un message d'erreur
     if (empty($recherche_these)) {
-        header("Location: ../view/index.php?msg=" . urlencode("Aucun résultat pour votre recherche."));
+        header("Location: ../view/index.php");
         exit();
     }
     return $recherche_these;
@@ -80,6 +85,44 @@ function getStatsFromResults(array $results): array
     return $stats;
 }
 
+function getResultAvances(): array
+{
+    return array();
+    global $conn;
+    $dir = "";
+    $etab = "";
+    $aut = "";
+    $mc = "";
+
+    if (isset($_GET["dir"])) {
+        $dir = $_GET["dir"];
+    }
+    if (isset($_GET["etab"])) {
+        $etab = $_GET["etab"];
+    }
+    if (isset($_GET["aut"])) {
+        $aut = $_GET["aut"];
+    }
+    if (isset($_GET["mc"])) {
+        $mc = $_GET["mc"];
+    }
+    $sql = "SELECT DISTINCT these.idThese, these.nnt FROM these
+    WHERE these.nnt IN (SELECT nnt FROM a_dirige WHERE idPersonne = :dir)
+    OR these.nnt IN (SELECT nnt FROM these_etablissement WHERE id_etablissement = :etab)
+    OR these.nnt IN (SELECT nnt FROM a_ecrit WHERE idPersonne = :aut)
+    OR these.nnt IN (SELECT nnt FROM mots_cle WHERE idMot = :mc)
+    ";
+    $recherche_these = $conn->prepare($sql);
+    $recherche_these->execute(array(
+        "dir" => $dir,
+        "etab" => $etab,
+        "aut" => $aut,
+        "mc" => $mc,
+    ));
+    $recherche_these->execute();
+    $recherche_these = $recherche_these->fetchAll(PDO::FETCH_ASSOC);
+    return $recherche_these;
+}
 
 /**
  * Prends une liste de idThese et de nnt et renvoie la liste d'objets Thèse

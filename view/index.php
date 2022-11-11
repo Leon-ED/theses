@@ -13,7 +13,7 @@ include_once("../controller/indexController.php");
         <div class="row">
             <div class="col-12">
                 <form class="d-flex" action="./search.php" method="GET">
-                    <input class="form-control me-2" type="search" placeholder="Chercher une thèse par titre, auteur, sujet ou mots-clé" name="search" aria-label="Recherche">
+                    <input class="form-control me-2" type="search" placeholder="Chercher une thèse par titre, auteur, discipline, nnt" name="search" aria-label="Recherche">
                     <button class="btn btn-outline-success" type="submit">Rechercher</button>
                 </form>
             </div>
@@ -23,4 +23,5 @@ include_once("../controller/indexController.php");
 <?= $bootstrap_alert ?>
 
 <?= require_once("../include/dashboard.inc.php"); ?>
+
 </html>

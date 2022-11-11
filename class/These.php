@@ -30,6 +30,19 @@ class These
         $this->liste_etablissements = array();
     }
 
+
+    static function getAllNNT($conn)
+    {
+        $sql = "SELECT nnt FROM these;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $AllNnt = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $stmt->closeCursor();
+        return $AllNnt;
+    }
+
+
+
     /**
      * Mets les titres de la thèse (français et anglais)
      * @param string $titre_fr Titre français
@@ -96,7 +109,7 @@ class These
      * @param string $nnt NNT de la thèse
      * @return these
      */
-    public function setNnt($nnt)
+    public function setNNT($nnt)
     {
         $this->nnt = $nnt;
         return $this;
@@ -124,7 +137,7 @@ class These
      * @param string $nnt NNT de la thèse
      * @return string
      */
-    public function getNnt(): string
+    public function getNNT(): string
     {
         return $this->nnt;
     }
@@ -210,31 +223,40 @@ class These
     /**
      * Retourne le(s) nom(s) et prénom(s) de(s) directeur(s) de thèse
      * @param PDO $conn Connexion à la base de données
-     * @return string Nom et prénom du directeur de thèse
+     * @return array Nom et prénom du/des directeur(s) de thèse
      */
-    public function getDirecteur($conn): string
+    public function getDirecteur($conn): array
     {
         $sql = "SELECT nomPersonne,prenomPersonne FROM personne,a_dirige WHERE personne.idPersonne = a_dirige.idPersonne AND :nnt = a_dirige.nnt";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result["prenomPersonne"] . " " . $result["nomPersonne"];
+        $result = $stmt->fetch();
+        $liste = array();
+        while ($result != null) {
+            $liste[] = $result["nomPersonne"] . " " . $result["prenomPersonne"];
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        return $liste;
     }
 
     /**
      * Retourne le nom et prénom de l'auteur de la thèse
      * @param PDO $conn Connexion à la base de données
-     * @return string Nom et prénom de l'auteur de la thèse
+     * @return array Liste des auteurs de la thèse
      */
-    public function getAuteur($conn): string
+    public function getAuteur($conn): array
     {
         $sql = "SELECT nomPersonne,prenomPersonne FROM personne,a_ecrit WHERE personne.idPersonne = a_ecrit.idPersonne AND :nnt = a_ecrit.nnt";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result["prenomPersonne"] . " " . $result["nomPersonne"];
+        $result = $stmt->fetch();
+        while ($result != null) {
+            $liste[] = $result["nomPersonne"] . " " . $result["prenomPersonne"];
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        return $liste;
     }
 
     public function getDiscine(): string
@@ -284,17 +306,17 @@ class These
      */
     function getLink(): string
     {
-        return "http://www.theses.fr/" . $this->nnt;
+        return "http://www.theses.fr/" . htmlspecialchars($this->nnt);
     }
 
     /**
      * Retourne la liste des mots clés de la thèse
      * @param PDO $conn Connexion à la base de données
-     * @return array|string Liste des mots clés de la thèse ou un message d'erreur
+     * @return a  Liste des mots clés de la thèse ou un message d'erreur
      */
-    function getMotsCles($conn): array|string
+    function getMotsCles($conn)
     {
-        $sql = "SELECT DISTINCT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
+        $sql = "SELECT DISTINCT lst.idMot id, lst.mot mot FROM sujets lst,these_sujet mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
@@ -308,19 +330,19 @@ class These
     /**
      * Retourne l'établissement d'origine de la thèse
      * @param PDO $conn Connexion à la base de données
-     * @return string Etablissement d'origine de la thèse
+     * @return array Liste des Etablissements
      */
-    function getEtablissement($conn): string
+    function getEtablissement($conn): array
     {
-
-        $sql = "SELECT nom FROM etablissement,these_etablissement WHERE nnt = :nnt AND etablissement.id = these_etablissement.id_etablissement LIMIT 1";
+        $sql = "SELECT nom FROM etablissement,these_etablissement WHERE etablissement.id = these_etablissement.id_etablissement AND these_etablissement.nnt = :nnt";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(":nnt", $this->nnt);
         $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result == null) {
-            return "Inconnu";
+        $result = $stmt->fetch();
+        while ($result != null) {
+            $liste[] = $result["nom"];
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
         }
-        return $result["nom"];
+        return $liste;
     }
 }
