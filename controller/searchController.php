@@ -53,9 +53,9 @@ function echoThese(array $listeThese): void
 /**
  * Affiche le code HTML des mots-clés d'une thèse
  * @param These $these
- * @return void
+ * 
  */
-function echoTheseMotsCles(These $these): void
+function echoTheseMotsCles(These $these)
 {
 
     global $conn;
