@@ -9,10 +9,8 @@ try {
     die("Une erreur a eu lieu lors de la lecture du fichier JSON");
 }
 
-
-
-
 $i = 0;
+
 
 $etablissements_soutenance = Etablissement::getListFromBase($conn); // Liste de tous les établissements de soutenance
 $liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les personnes
@@ -36,16 +34,6 @@ foreach ($data as $these) {
     $titre = array("fr" => $these["titres"]["fr"], "en" => $these["titres"]["en"]);
     $resume = array("fr" => $these["resumes"]["fr"], "en" => $these["resumes"]["en"]);
     $auteur = array("nom" => $these["auteur"]["nom"], "prenom" => $these["auteur"]["prenom"]);
-    $dateSoutenance = $these["date_soutenance"];
-    $discipline = $these["discipline"]["fr"];
-
-    $estSoutenue = "oui";
-    $estAccessible = "oui";
-    $langue = $these["langue"];
-    $statut = $these["statut"];
-    $iddn = $these["iddoc"];
-    $nnt = $these["nnt"];
-
 
 
     // On crée un objet thèse et on lui mets ses champs
@@ -54,13 +42,13 @@ foreach ($data as $these) {
         ->setTitre($titre["fr"], $titre["en"])
         ->setResume($resume["fr"], $resume["en"])
         ->setAuteur($auteur["nom"], $auteur["prenom"])
-        ->setDateSoutenance($dateSoutenance)
-        ->setLangueThese($langue)
-        ->setSoutenue($estSoutenue)
-        ->setAccessible($estAccessible)
-        ->setDiscipline($discipline)
-        ->setIddoc($iddn)
-        ->setNNT($nnt);
+        ->setDateSoutenance($these["date_soutenance"])
+        ->setLangueThese($these["langue"])
+        ->setSoutenue("oui")
+        ->setAccessible($these["accessible"])
+        ->setDiscipline($these["discipline"]["fr"])
+        ->setIddoc($these["iddoc"])
+        ->setNNT($these["nnt"]);
 
 
     // On insère la thèse dans la BDD et on récupère son internal ID.
@@ -102,7 +90,6 @@ foreach ($data as $these) {
             $resultat->insertDirecteur($conn, $theseOBJ->getNNT());
         }
     }
-    unset($liste_personnes);
 
 
     //On boucle sur les établissements de soutenance
@@ -123,26 +110,29 @@ foreach ($data as $these) {
 
 
         } else {  //Il y a un résultat on le récupère donc
-            unset($etablissementOBJ); // On supprime l'objet établissement
             $etablissementOBJ = $resultat; // On récupère le bon établissement
         }
         $theseOBJ->addEtablissement($etablissementOBJ); // On ajoute l'établissement à la thèse
         addLiaisonEtablissement($theseOBJ, $conn); // On fait le lien entre la thèse et l'établissement
+
     }
 
+    // On boucle sur les sujets de la thèse (seulement en FR)
     foreach ($these["sujets"]["fr"] as $sujet) {
+        // On crée l'objet sujet et on lui mets ses champs
         $sujetOBJ = new Sujet();
         $sujetOBJ
             ->setSujet($sujet);
 
+        // On vérifie que le sujet n'est pas déjà dans la liste des sujets si oui on prend le sujet déjà existant sinon on l'ajoute et l'insère dans la base
         $resultat = Sujet::checkInArray($sujetOBJ, $sujets);
         if ($resultat == null) {
             $sujets[] = $sujetOBJ;
             $sujetOBJ->insertToBase($conn);
         } else {
-            unset($sujetOBJ);
             $sujetOBJ = $resultat;
         }
+        // On ajoute le lien entre la thèse et le sujet
         $sujetOBJ->insertSujet($conn, $theseOBJ->getNNT());
     }
 }
