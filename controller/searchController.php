@@ -30,16 +30,16 @@ function echoThese(array $listeThese)
 ?>
         <div class="these-card">
             <div class="these-card-header">
-                <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= $these->getTitre(); ?></a></h2>
+                <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= htmlspecialchars($these->getTitre()); ?></a></h2>
                 <div class="these-card-infos">
-                    <p>par <span class="these-card-author"><a href="#"><span><?= $these->getAuteur($conn); ?></span></a></p>
-                    <p>le : <span class="these-card-date"><?= $these->getDateSoutenance() ?></span></p>
+                    <p>par <span class="these-card-author"><a href="#"><?= echoAuteurs($these); ?></a></p>
+                    <p>le : <span class="these-card-date"><?= htmlspecialchars($these->getDateSoutenance()) ?></span></p>
                 </div>
             </div>
             <div class="these-card-body">
-                <p>Sous la direction de : <a href="#"><span><?= $these->getDirecteur($conn); ?></span></a> </p>
-                <p>Discipline: <a href="#"><?= $these->getDiscine() ?></a> </p>
-                <p>Établissement : <a href="#"><?= $these->getEtablissement($conn) ?></a> </p>
+                <p>Sous la direction de : <a href="#"><span><?= echoDirecteurs($these); ?></span></a> </p>
+                <p>Discipline: <a href="#"><?= htmlspecialchars($these->getDiscine()) ?></a> </p>
+                <p>Établissement : <a href="#"><?= echoEtablissements($these) ?></a> </p>
                 <p>Mots-clés: <?php echoTheseMotsCles($these) ?> </p>
             </div>
         </div>
@@ -66,7 +66,62 @@ function echoTheseMotsCles(These $these)
         return;
     }
     foreach ($liste_mots as $motCle) {
-        $str = $str . "<a href='?mc=$motCle[id]'><span>$motCle[mot]</span></a> , ";
+        $mot = htmlspecialchars($motCle['mot']);
+        $id = urlencode(htmlspecialchars($motCle['id']));
+        $str = $str . "<a href='?mc=$id'><span>$mot</span></a> , ";
+    }
+    // Supprime la dernière virgule
+    $str = substr($str, 0, -2);
+    echo $str;
+}
+
+/**
+ * Affiche le code HTML des directeurs d'une thèse
+ * @param These $these
+ * 
+ */
+function echoDirecteurs(These $these)
+{
+    global $conn;
+    $str = "";
+    $directeurs = $these->getDirecteur($conn);
+    foreach ($directeurs as $directeur) {
+        $nom = htmlspecialchars($directeur);
+        $url = urlencode($nom);
+        $str = $str .  "<a href='?dir=$url'><span>$nom</span></a> , ";
+    }
+    // Supprime la dernière virgule
+    $str = substr($str, 0, -2);
+    echo $str;
+}
+
+/**
+ * Affiche les auteurs d'une thèse
+ */
+function echoAuteurs(These $these)
+{
+    global $conn;
+    $str = "";
+    $auteurs = $these->getAuteur($conn);
+    foreach ($auteurs as $auteur) {
+        $nom = htmlspecialchars($auteur);
+        $url = urlencode($nom);
+        $str = $str .  "<a href='?aut=$url'><span>$nom</span></a> , ";
+    }
+    // Supprime la dernière virgule
+    $str = substr($str, 0, -2);
+    echo $str;
+}
+
+function echoEtablissements(These $these)
+{
+    global $conn;
+    $str = "";
+    $etablissements = $these->getEtablissement($conn);
+    foreach ($etablissements as $etablissement) {
+        $nom = htmlspecialchars($etablissement);
+        $url = urlencode($nom);
+        $str = $str .  "<a href='?etab=$url'><span>$nom</span></a> , ";
     }
     // Supprime la dernière virgule
     $str = substr($str, 0, -2);
