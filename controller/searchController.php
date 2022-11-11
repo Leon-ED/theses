@@ -20,7 +20,7 @@ $theses = createTheseFromResults($resultats);
  * @return void
  * @throws Exception Si un élément n'est pas un objet thèse
  */
-function echoThese(array $listeThese): void
+function echoThese(array $listeThese)
 {
     global $conn;
     foreach ($listeThese as $these) {
