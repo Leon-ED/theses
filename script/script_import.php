@@ -20,10 +20,10 @@ foreach ($data as $these) {
 
 
     // En local pour tester sans importer toute la data.
-    // $i++;
-    // if ($i >= 20) {
-    //     break;
-    // }
+    $i++;
+    if ($i >= 20) {
+        break;
+    }
 
     // On vérifie que la thèse n'est pas déjà présente dans la base de données
     if (in_array($these['nnt'], $liste_NNT)) {
@@ -72,7 +72,6 @@ foreach ($data as $these) {
             $resultat->insertAuteur($conn, $theseOBJ->getNNT());
         }
     }
-
     // On boucle sur chaque Directeur de la thèse
     foreach ($these["directeurs_these"] as $directeur) {
         $personneOBJ = new Personne();
@@ -91,7 +90,6 @@ foreach ($data as $these) {
         }
     }
 
-
     //On boucle sur les établissements de soutenance
     foreach ($these["etablissements_soutenance"] as $etablissement) {
         // On créé l'objet établissement et on lui mets ses champs
@@ -99,6 +97,8 @@ foreach ($data as $these) {
         $etablissementOBJ
             ->setNom($etablissement["nom"])
             ->setIdRef($etablissement["idref"]);
+        var_dump($etablissement["idref"]);
+        var_dump($etablissementOBJ);
 
         //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
         $resultat = Etablissement::checkInArray($etablissementOBJ, $etablissements_soutenance);
@@ -107,8 +107,6 @@ foreach ($data as $these) {
         if ($resultat == null) {
             $etablissements_soutenance[] = $etablissementOBJ; // On ajoute l'établissement à la liste
             $etablissementOBJ->insertToBase($conn); // On insère l'établissement dans la base;
-
-
         } else {  //Il y a un résultat on le récupère donc
             $etablissementOBJ = $resultat; // On récupère le bon établissement
         }
@@ -116,7 +114,6 @@ foreach ($data as $these) {
         addLiaisonEtablissement($theseOBJ, $conn); // On fait le lien entre la thèse et l'établissement
 
     }
-
     // On boucle sur les sujets de la thèse (seulement en FR)
     foreach ($these["sujets"]["fr"] as $sujet) {
         // On crée l'objet sujet et on lui mets ses champs
@@ -125,9 +122,9 @@ foreach ($data as $these) {
             ->setSujet($sujet);
 
         // On vérifie que le sujet n'est pas déjà dans la liste des sujets si oui on prend le sujet déjà existant sinon on l'ajoute et l'insère dans la base
-        $resultat = Sujet::checkInArray($sujetOBJ, $sujets);
+        $resultat = Sujet::checkInArray($sujetOBJ, $liste_sujets);
         if ($resultat == null) {
-            $sujets[] = $sujetOBJ;
+            $liste_sujets[] = $sujetOBJ;
             $sujetOBJ->insertToBase($conn);
         } else {
             $sujetOBJ = $resultat;

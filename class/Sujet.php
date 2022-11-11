@@ -11,8 +11,15 @@ class Sujet extends AbstractObjet
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $AllSujets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-        return $AllSujets;
+        $sujetsList = array();
+        foreach ($AllSujets as $sujet) {
+            $sujetOBJ = new Sujet();
+            $sujetOBJ
+                ->setSujet($sujet['mot'])
+                ->setIdBase($sujet['idMot']);
+            $sujetsList[] = $sujetOBJ;
+        }
+        return $sujetsList;
     }
 
     /**
@@ -91,7 +98,7 @@ class Sujet extends AbstractObjet
         }
         if (parent::getIdBase() == $obj->getIdBase())
             return true;
-        return $this->sujet == $obj->sujet;
+        return strcasecmp($this->getSujet(), $obj->getSujet()) == 0;
     }
 
     /**

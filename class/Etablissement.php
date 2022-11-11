@@ -68,7 +68,7 @@ class Etablissement extends AbstractObjet
             $insertEtablissement = $conn->prepare($sql);
             $insertEtablissement->execute(array(
                 ":name" => $this->name,
-                ":idRef" => $this->idRef
+                ":idRef" => $this->getIdRef()
             ));
             $this->setIdBase($conn->lastInsertId());
         } catch (PDOException $e) {
@@ -133,7 +133,6 @@ class Etablissement extends AbstractObjet
         if (!($obj instanceof Etablissement)) {
             return false;
         }
-        return parent::getIdRef() == $obj->getIdRef() ||
-            $this->name == $obj->getName();
+        return parent::getIdRef() == $obj->getIdRef() || strcasecmp($this->name, $obj->getName()) == 0;
     }
 }

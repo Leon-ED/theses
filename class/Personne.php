@@ -63,7 +63,6 @@ class Personne extends AbstractObjet
     {
         $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
         $insertPersonneStmt->execute(array($this->nom, $this->prenom, $this->getIdRef()));
-        var_dump($this->getIdRef());
         parent::setIdBase($conn->lastInsertId());
     }
 
