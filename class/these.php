@@ -290,9 +290,9 @@ class These
     /**
      * Retourne la liste des mots clés de la thèse
      * @param PDO $conn Connexion à la base de données
-     * @return array|string Liste des mots clés de la thèse ou un message d'erreur
+     * @return a  Liste des mots clés de la thèse ou un message d'erreur
      */
-    function getMotsCles($conn): array|string
+    function getMotsCles($conn)
     {
         $sql = "SELECT DISTINCT lst.idMot id, lst.mot mot FROM liste_mots_cles lst,mots_cle mc WHERE lst.idMot = mc.idMot AND mc.nnt = :nnt";
         $stmt = $conn->prepare($sql);
