@@ -30,6 +30,19 @@ class These
         $this->liste_etablissements = array();
     }
 
+
+    static function getAllNNT($conn)
+    {
+        $sql = "SELECT nnt FROM these;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $AllNnt = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $stmt->closeCursor();
+        return $AllNnt;
+    }
+
+
+
     /**
      * Mets les titres de la thèse (français et anglais)
      * @param string $titre_fr Titre français
@@ -96,7 +109,7 @@ class These
      * @param string $nnt NNT de la thèse
      * @return these
      */
-    public function setNnt($nnt)
+    public function setNNT($nnt)
     {
         $this->nnt = $nnt;
         return $this;

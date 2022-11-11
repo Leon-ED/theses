@@ -17,8 +17,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once("../config/base.php");
 require_once("../class/AbstractClass.php");
-require_once("../class/these.php");
-require_once("../class/personne.php");
+require_once("../class/Sujet.php");
+require_once("../class/These.php");
+require_once("../class/Personne.php");
 require_once("../script/functions.php");
 require_once("../class/Etablissement.php");
 //gwadz

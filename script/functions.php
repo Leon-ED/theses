@@ -1,43 +1,8 @@
 <?php
 
-function getAllNnt($conn)
-{
-    $sql = "SELECT nnt FROM these;";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-    $AllNnt = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    $stmt->closeCursor();
-    return $AllNnt;
-}
 
 
-function getAllPersonnesIdRef($conn)
-{
-    $sql = "SELECT idRef FROM personne;";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-    $AllNnt = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    return $AllNnt;
-}
 
-function searchEtablissement(Etablissement $obj, PDO $conn)
-{
-    $idRef = $obj->getIdRef();
-    $nom = $obj->getName();
-
-    // Si l'idRef est null on compare alors juste le nom de l'établissement
-    if ($idRef == null) {
-        $sql = "SELECT id FROM etablissement WHERE nom = ?;";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(array($nom));
-    } else { // Sinon on compare l'idRef et le nom
-        $sql = "SELECT id FROM etablissement WHERE idRef = :idRef AND nom = :nom;";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(array(":idRef" => $idRef, ":nom" => $nom));
-    }
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result["id"];
-}
 
 /**
  * Ajoute dans la base le lien entre une thèse et son établissement de soutenance
