@@ -1,5 +1,11 @@
 <?php
 
+
+/**
+ * Classe abstraite pour les objets de la base de données
+ * permet d'avoir des méthodes communes à tous les objets
+ * 
+ */
 abstract class AbstractObjet
 {
 

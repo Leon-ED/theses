@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Classe représentant un établissement d'une thèse (Etablissement de soutenance et Ecole doctorale)
+ */
 class Etablissement extends AbstractObjet
 {
 
