@@ -1,2 +1,4 @@
 config/credentials.php
+.htpasswd
 .htaccess
+.idea
