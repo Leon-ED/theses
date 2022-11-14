@@ -1,4 +1,6 @@
 # but-projet-thesefr
+Les fichiers 
+<strong>credentials.php , .htpasswd et .htaccess ne sont pas push sur le Git !</strong>
 
 Pour utiliser le projet :
 créer un fichier <code>credentials.php</code> dans le dossier <code>config</code>

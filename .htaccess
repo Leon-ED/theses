@@ -1,3 +1,0 @@
-ErrorDocument 401 "Authorisation Required"
-Satisfy All
-RewriteRule ^config/ - [L,R=404]
