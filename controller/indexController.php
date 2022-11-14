@@ -1,4 +1,7 @@
 <?php
+/**
+ * S'occupe de gérer l'affichage de la page view/index.php
+ */
 $stats = getStatsTheses(); //On récupère les statistiques globales
 
 $nombre_theses = $stats['nombre_theses'];
@@ -25,7 +28,7 @@ if (isset($_GET['msg'])) {
  * 
  * @return array $stats : tableau contenant les statistiques
  */
-function getStatsTheses()
+function getStatsTheses(): array
 {
     global $conn;
 

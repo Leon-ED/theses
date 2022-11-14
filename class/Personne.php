@@ -6,11 +6,6 @@ class Personne extends AbstractObjet
     private $prenom;
     private $theseNNT;
 
-    /**
-     * Renvoie la liste des personnes  présentes dans la base de données
-     * @param PDO $conn La connexion à la base de données
-     * @return array La liste des personnes
-     */
     public static function getListFromBase($conn)
     {
         $sql = "SELECT * FROM personne";
@@ -31,13 +26,7 @@ class Personne extends AbstractObjet
         return $personnesList;
     }
 
-    /**
-     * Retourne true si la personne en paramètre est dans la liste
-     * @param Personne $personneOBJ La personne à chercher
-     * @param array $liste La liste de Personnes
-     * @return Personne|null Retourne la personne  trouvée ou null si il n'est pas trouvé
-     * @throws InvalidArgumentException Si l'un des paramètres n'est pas du bon type
-     */
+
     public static function checkInArray($personneOBJ, $liste)
     {
         if (!($personneOBJ instanceof Personne)) {
@@ -54,11 +43,6 @@ class Personne extends AbstractObjet
 
 
 
-    /**
-     * Insère une personne dans la base de données
-     * @param PDO $conn La connexion à la base de données
-     * @return void
-     */
     public function insertToBase($conn)
     {
         $insertPersonneStmt = $conn->prepare("INSERT INTO personne(nomPersonne,prenomPersonne,idRef) VALUES(?,?,?)");
@@ -66,11 +50,6 @@ class Personne extends AbstractObjet
         parent::setIdBase($conn->lastInsertId());
     }
 
-    /**
-     * Mets à jour  une personne dans la base de données
-     * @param PDO $conn La connexion à la base de données
-     * @return void
-     */
     public function updateToBase($conn)
     {
         if (parent::getIdRef() == null) {
@@ -85,11 +64,6 @@ class Personne extends AbstractObjet
         $insertPersonneStmt->execute(array($this->nom, $this->prenom, parent::getIdRef()));
     }
 
-    /**
-     * Vérifie si deux objets sont identiques
-     * @param Object $obj
-     * @return bool
-     */
     public function equals($obj)
     {
         if (!($obj instanceof Personne)) {
@@ -142,12 +116,24 @@ class Personne extends AbstractObjet
     }
 
 
+    /**
+     * Insère l'objet en tant qu'auteur d'une thèse dans la base
+     * @param PDO $conn
+     * @param $theseNNT
+     * @return void
+     */
     public function insertAuteur($conn, $theseNNT)
     {
         $insertAuteurStmt = $conn->prepare("INSERT INTO a_ecrit(idPersonne,nnt) VALUES(?,?)");
         $insertAuteurStmt->execute(array(parent::getIdBase(), $theseNNT));
     }
 
+    /**
+     * Insère l'objet en tant que directeur dans la base
+     * @param $conn
+     * @param $theseNNT
+     * @return void
+     */
     public function insertDirecteur($conn, $theseNNT)
     {
         $insertAuteurStmt = $conn->prepare("INSERT INTO a_dirige(idPersonne,nnt) VALUES(?,?)");

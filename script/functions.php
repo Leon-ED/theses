@@ -1,7 +1,8 @@
 <?php
-
-
-
+/**
+ * Fonctions générales pour l'application PHP
+ *
+ **/
 
 
 /**

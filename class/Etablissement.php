@@ -2,17 +2,12 @@
 
 /**
  * Classe représentant un établissement d'une thèse (Etablissement de soutenance et Ecole doctorale)
+ *
  */
 class Etablissement extends AbstractObjet
 {
 
-    /**
-     * Retourne true si l'établissement founit est déjà dans la liste donnée
-     * @param Etablissement $etabliseementOBJ L'établissement à chercher
-     * @param array $listeEtablissement La liste d'établissement
-     * @return Etablissement|null Retourne l'établissement trouvé ou null si il n'est pas trouvé
-     * @throws InvalidArgumentException Si l'un des paramètres n'est pas du bon type
-     */
+
     public static function checkInArray($etablissementOBJ, $listeEtablissement)
     {
         if (!($etablissementOBJ instanceof Etablissement)) {
@@ -28,11 +23,7 @@ class Etablissement extends AbstractObjet
         return null;
     }
 
-    /**
-     * Renvoie la liste des établissements présents dans la base de données
-     * @param PDO $conn La connexion à la base de données
-     * @return array La liste des établissements
-     */
+
     public static function getListFromBase($conn)
     {
         $sql = "SELECT * FROM etablissement";
@@ -59,11 +50,7 @@ class Etablissement extends AbstractObjet
     {
     }
 
-    /**
-     * Mets le nom de l'établissement
-     * @param string $name Nom de l'établissement
-     * @return void
-     */
+
     function insertToBase($conn)
     {
         try {
@@ -75,16 +62,12 @@ class Etablissement extends AbstractObjet
             ));
             $this->setIdBase($conn->lastInsertId());
         } catch (PDOException $e) {
-            echo "Erreur insertion etablissement $this->name : $this->idRef";
+            echo "Erreur insertion etablissement $this->name : " . $this->getIdRef();
             echo $e->getMessage();
         }
     }
 
-    /**
-     * Mets à jour  un établissement dans la base de données
-     * @param PDO $conn La connexion à la base de données
-     * @return void
-     */
+
     public function updateToBase($conn)
     {
         if (parent::getIdRef() == null) {
@@ -97,7 +80,7 @@ class Etablissement extends AbstractObjet
         $UpdateEtablissementStmt = $conn->prepare("UPDATE etablissement SET nom= :nom WHERE nom= :nom AND idRef = ?");
         $UpdateEtablissementStmt->execute(array(
             ":nom" => $this->nom,
-            ":idRef" => $this->idRef
+            ":idRef" => $this->getIdRef()
         ));
     }
 

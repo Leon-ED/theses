@@ -1,4 +1,8 @@
 <?php
+/**
+ * Fichier de configuration
+ * Insérer ici tous les require et tout ce qui doit être gérer au niveau global
+ */
 if (PHP_SESSION_NONE === session_status()) {
     session_start();
 }

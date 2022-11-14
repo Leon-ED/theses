@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * S'occupe de gérer l'affichage de la page view/search.php
+ */
 $resultats = getSearchResults();
 $stats = getStatsFromResults($resultats);
 
@@ -135,8 +137,7 @@ function echoEtablissements(These $these)
 /**
  * Renvoie la liste des idTheses et nnt correspondant aux résultats de la recherche
  * Recherche selon les titres, la discipline,les mots-clés et l'auteur
- * 
- * @param none
+ *
  * @return array 
  */
 function getSearchResults(): array

@@ -1,6 +1,9 @@
 <?php
 require_once("../config/config.php");
-
+/**
+ * Module s'occupant de lire le fichier JSON et d'importer toutes les données
+ * dans la base
+ */
 
 try {
     $file = file_get_contents("../fichiers/extract_theses.json");
@@ -16,6 +19,8 @@ $etablissements_soutenance = Etablissement::getListFromBase($conn); // Liste de 
 $liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les personnes
 $liste_sujets = Sujet::getListFromBase($conn); //Liste de tous les sujets
 $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
+
+//Tout importer dans la boucle principale est plus pratique mais plus lent ...
 foreach ($data as $these) {
 
 

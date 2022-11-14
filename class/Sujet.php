@@ -22,13 +22,6 @@ class Sujet extends AbstractObjet
         return $sujetsList;
     }
 
-    /**
-     * Retourne l'Objet sujet s'il le même est dans la liste
-     * @param Sujet $sujetOBJ
-     * @param array $liste La liste
-     * @return Sujet|null Retourne
-     * @throws InvalidArgumentException Si l'un des paramètres n'est pas du bon type
-     */
     static function checkInArray($sujetOBJ, $liste)
     {
         if (!($sujetOBJ instanceof Sujet)) {

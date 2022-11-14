@@ -6,6 +6,7 @@
  */
 class These
 {
+    /**TODO : Implétenter la classe abstraite **/
 
     //Champs
     private  $idThese;
@@ -292,12 +293,13 @@ class These
 
 
     /**
-     * Retourne la date de la soutenance
+     * Retourne la date de la soutenance formatée (jj/mm/aaaa)
      * @return string Date de la soutenance
      */
     function getDateSoutenance(): string
     {
-        return $this->dateSoutance;
+        $date = new DateTime($this->dateSoutance);
+        return $date->format("d/m/Y");
     }
 
     /**

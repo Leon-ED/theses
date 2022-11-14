@@ -4,27 +4,63 @@
 /**
  * Classe abstraite pour les objets de la base de données
  * permet d'avoir des méthodes communes à tous les objets
- * 
  */
 abstract class AbstractObjet
 {
 
-    private $idRef; // Idref de l'objet
-    private $idBase; // Id de l'objet dans la base de données
-
-
-    abstract public function insertToBase($conn);
-    abstract public function equals($obj);
-    abstract public function updateToBase($conn);
-    abstract public static function getListFromBase($conn);
-    abstract public static function checkInArray($personneOBJ, $liste);
-
+    /**
+     * Idref de l'objet
+     * @var
+     */
+    private $idRef;
+    /**
+     * Id de l'objet dans la base de données
+     * @var
+     */
+    private $idBase;
 
 
     /**
-     * Mets l'id de l'objet dans la base de données
-     * @param int $idBase Id de l'objet dans la base de données
-     * @return AbstractObjet
+     * Insère dans la base de données l'objet
+     * @param PDO $conn - La base de données
+     * @return none
+     */
+    abstract public function insertToBase($conn);
+
+    /**
+     * Renvoie true si l'objet possède les mêmes champs, false sinon
+     * @param $obj
+     * @return boolean
+     */
+    abstract public function equals($obj);
+
+    /**
+     * Trouve l'objet dans la base de données et le met à jour
+     * @param AbstractObjet $obj - L'objet à mettre à jour
+     * @return none
+     */
+    abstract public function updateToBase($conn);
+
+    /**
+     * Renvoie la liste des objets présents dans la base de données correspond à la classe appelée
+     * @param PDO $conn La connexion à la base de données
+     * @return array La liste des objets PHP
+     */
+    abstract public static function getListFromBase($conn);
+
+    /**
+     * Retourne true si l'établissement founit est déjà dans la liste donnée
+     * @param AbstractObjet $objet L'objet à chercher (de la même classe que la classe appelée)
+     * @param array $liste La liste d'objet à chercher
+     * @return AbstractObjet|null Retourne l'objet trouvé ou null si il n'est pas trouvé
+     * @throws InvalidArgumentException Si l'un des paramètres n'est pas du bon type
+     */
+    abstract public static function checkInArray($objet, $liste);
+
+
+    /**
+     * @param $idBase
+     * @return $this
      */
     public function setIdBase($idBase)
     {

@@ -1,3 +1,4 @@
+<!-- Affichage des statistiques-->
 <section class="dashboard">
     <div class="card widget-flat text-center" style="width: 18rem;">
         <div class="card-body">
