@@ -1,4 +1,5 @@
 <?php
+
 /**
  * S'occupe de gérer l'affichage de la page view/search.php
  */
@@ -156,22 +157,31 @@ function getSearchResults(): array
     // }
 
 
+
     $recherche = $_GET["search"];
-    // On fait la recherche sur les titres, la discipline,les mots-clés et l'auteur
+    // On fait la recherche sur les titres, la discipline et le nnt
     $sql = "
     SELECT DISTINCT these.idThese, these.nnt FROM these
     WHERE titre_fr LIKE :recherche
     OR titre_en LIKE :recherche
     OR discipline LIKE :recherche
     OR these.nnt LIKE :recherche
-    
-";
-    // OR (a_ecrit.nnt = these.nnt AND personne.idPersonne = a_ecrit.idPersonne AND (personne.nomPersonne LIKE :recherche OR personne.prenomPersonne LIKE :recherche OR CONCAT(personne.prenomPersonne, ' ', personne.nomPersonne) LIKE :recherche))
-    // ^^ provoque un ralentissement de la recherche 
+    ";
 
+    //Recherche sur les auteurs
+    $sql2 = "
+    SELECT these.nnt,
+       these.idThese
+        FROM these
+        INNER JOIN a_ecrit ON these.nnt = a_ecrit.nnt
+        INNER JOIN personne ON a_ecrit.idPersonne = personne.idPersonne
+        WHERE prenomPersonne = :recherche
+        OR personne.nomPersonne = :recherche
+        OR CONCAT_WS(' ', personne.nomPersonne, personne.prenomPersonne) = :recherche
+        OR CONCAT_WS(' ', personne.prenomPersonne, personne.nomPersonne) = :recherche
+    ";
 
-
-    // On exécute la requête
+    // On exécute les requêtes
     $recherche_these = $conn->prepare($sql);
     $recherche_these->execute(array(
         "recherche" => $recherche,
@@ -179,12 +189,24 @@ function getSearchResults(): array
     $recherche_these->execute();
     $recherche_these = $recherche_these->fetchAll(PDO::FETCH_ASSOC);
 
+
+    $recherche_auteur = $conn->prepare($sql2);
+    $recherche_auteur->execute(array(
+        "recherche" => $recherche,
+    ));
+    $recherche_auteur->execute();
+    $recherche_auteur = $recherche_auteur->fetchAll(PDO::FETCH_ASSOC);
+
+    // On fusionne les résultats
+    $resultats = array_merge($recherche_these, $recherche_auteur);
+
+
     // Si elle n'a rien donné on renvoie vers la page d'accueil avec un message d'erreur
-    if (empty($recherche_these)) {
-        header("Location: ../view/index.php");
+    if (empty($resultats)) {
+        header("Location: ../view/index.php?msg=aucun_resultat");
         exit();
     }
-    return $recherche_these;
+    return $resultats;
 }
 
 

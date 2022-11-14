@@ -138,3 +138,6 @@ foreach ($data as $these) {
         $sujetOBJ->insertSujet($conn, $theseOBJ->getNNT());
     }
 }
+if (!DEBUG) {
+    header("Location: ../view/index.php");
+}
