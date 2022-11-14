@@ -225,19 +225,19 @@ function getStatsFromResults(array $results): array
 
 
     // Nombre d'auteurs
-    $sql = "SELECT COUNT(idPersonne) as nombre_auteurs FROM a_ecrit WHERE nnt IN (" . implodeToSQL(array_column($results, "nnt")) . ")";
+    $sql = "SELECT COUNT(DISTINCT idPersonne) as nombre_auteurs FROM a_ecrit WHERE nnt IN (" . implodeToSQL(array_column($results, "nnt")) . ")";
     $sth = $conn->prepare($sql);
     $sth->execute();
     $stats["nombre_auteurs"] = $sth->fetch()["nombre_auteurs"];
 
     //Nombre de directeurs
-    $sql = "SELECT COUNT(idPersonne) as nombre_directeurs FROM a_dirige WHERE nnt IN (" . implodeToSQL(array_column($results, "nnt")) . ")";
+    $sql = "SELECT COUNT(DISTINCT idPersonne) as nombre_directeurs FROM a_dirige WHERE nnt IN (" . implodeToSQL(array_column($results, "nnt")) . ")";
     $sth = $conn->prepare($sql);
     $sth->execute();
     $stats["nombre_directeurs"] = $sth->fetch()["nombre_directeurs"];
 
     // Nombre d'établissements
-    $sql = "SELECT COUNT(id_etablissement) as nombre_etablissements FROM these_etablissement WHERE nnt IN (" . implodeToSQL(array_column($results, "nnt")) . ")";
+    $sql = "SELECT COUNT(DISTINCT id_etablissement) as nombre_etablissements FROM these_etablissement WHERE nnt IN (" . implodeToSQL(array_column($results, "nnt")) . ")";
     $sth = $conn->prepare($sql);
     $sth->execute();
     $stats["nombre_etablissements"] = $sth->fetch()["nombre_etablissements"];
