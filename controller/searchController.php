@@ -165,14 +165,17 @@ function getSearchResults(): array
     }
 
 
-    $recherche = $_GET["search"];
+    $recherche = "%$_GET[search]%";
     // On fait la recherche sur les titres, la discipline et le nnt
     $sql = "
     SELECT DISTINCT these.idThese, these.nnt FROM these
     WHERE titre_fr LIKE :recherche
+    OR resume_fr LIKE :recherche
+    OR resume_en LIKE :recherche
     OR titre_en LIKE :recherche
     OR discipline LIKE :recherche
     OR these.nnt LIKE :recherche
+    OR dateSoutenance LIKE :recherche
     ";
 
     //Recherche sur les auteurs
@@ -199,7 +202,7 @@ function getSearchResults(): array
 
     $recherche_auteur = $conn->prepare($sql2);
     $recherche_auteur->execute(array(
-        "recherche" => $recherche,
+        "recherche" => $recherche
     ));
     $recherche_auteur->execute();
     $recherche_auteur = $recherche_auteur->fetchAll(PDO::FETCH_ASSOC);
