@@ -51,6 +51,8 @@ a {
     box-shadow: 0 0 5px #ccc;
 }
 
+
+
 /**Barre de recherche**/
 .search-result-h {
     margin: 1%;
@@ -156,4 +158,22 @@ a {
 
 #retour:hover {
     background-color: green;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-bar {
+        flex-direction: column;
+    }
+
+    .nav-bar * {
+        flex-direction: column;
+    }
+
+    .these-card {
+        font-size: smaller;
+    }
+
+    .these-card {
+        width: 95%;
+    }
 }
