@@ -104,8 +104,7 @@ foreach ($data as $these) {
         $etablissementOBJ
             ->setNom($etablissement["nom"])
             ->setIdRef($etablissement["idref"]);
-        var_dump($etablissement["idref"]);
-        var_dump($etablissementOBJ);
+
 
         //On vérifie que l'établissement n'est pas déjà dans la liste des établissements
         $resultat = Etablissement::checkInArray($etablissementOBJ, $etablissements_soutenance);
