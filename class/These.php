@@ -215,10 +215,14 @@ class These
      */
     public function getTitre(): string
     {
-        if ($this->titreThese_fr == null) {
-            return $this->titreThese_en;
+        $titre = "Erreur lors de la récupération du titre";
+        if ($this->titreThese_en != null) {
+            $titre = $this->titreThese_en;
         }
-        return $this->titreThese_fr;
+        if ($this->titreThese_fr != null) {
+            $titre =  $this->titreThese_fr;
+        }
+        return $titre;
     }
 
     /**

@@ -13,6 +13,7 @@ try {
     <?php require_once("../include/nav.inc.php") ?>
 
     <h3 class="search-result-h">Résultats de recherche :</h2>
+        <?= $alert ?>
         <?php require_once("../include/dashboard.inc.php"); ?>
         <h3 class="search-result-h">Thèses :</h3>
 
@@ -24,7 +25,8 @@ try {
 
 
 
-
+        <button id="retour"><a href="#top" style="color: white">Retour en haut</a></button>
 </body>
+
 
 </html>

@@ -15,6 +15,7 @@ include_once("../controller/indexController.php");
                 <form class="d-flex" action="./search.php" method="GET">
                     <input class="form-control me-2" type="search" placeholder="Chercher une thèse par titre, auteur, discipline, nnt" name="search" aria-label="Recherche">
                     <button class="btn btn-outline-success" type="submit">Rechercher</button>
+                    <a class="btn btn-outline-secondary" href="./search.php?random=10" style="white-space:nowrap ; margin-left: 3px;">J'ai de la chance</a>
                 </form>
             </div>
         </div>

@@ -2,6 +2,7 @@
 * {
     list-style: none;
 }
+
 a {
     text-decoration: none;
 }
@@ -135,4 +136,24 @@ a {
     display: flex;
     flex-direction: column;
 
+}
+
+/**Bouton retour en haut**/
+#retour {
+    position: fixed;
+    bottom: 10px;
+    float: right;
+    right: 5%;
+    max-width: fit-content;
+    width: 100%;
+    font-size: 12px;
+    border-color: rgba(85, 85, 85, 0.2);
+    background-color: #0d6efd;
+    padding: .5px;
+    border-radius: 4px;
+
+}
+
+#retour:hover {
+    background-color: green;
 }

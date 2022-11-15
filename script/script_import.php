@@ -39,6 +39,9 @@ foreach ($data as $these) {
 
     // On récupère les informations de la thèse
     $titre = array("fr" => $these["titres"]["fr"], "en" => $these["titres"]["en"]);
+    if ($titre == null) {
+        $titre = $these["titres"][0];
+    }
     $resume = array("fr" => $these["resumes"]["fr"], "en" => $these["resumes"]["en"]);
     $auteur = array("nom" => $these["auteur"]["nom"], "prenom" => $these["auteur"]["prenom"]);
 

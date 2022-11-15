@@ -14,7 +14,7 @@ if (isset($file) && $file != "index.php") { // Si on est pas sur la page d'accue
                     echo '<a href="#" class="nav-link">Deconnexion</a>';
                 } else {
                     echo '<a href="#" class="nav-link">Connexion</a>';
-                    echo '<a href="# class="nav-link">Inscription</a>';
+                    echo '<a href="#" class="nav-link">Inscription</a>';
                 }
                 ?>
             </div>

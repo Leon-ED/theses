@@ -4,6 +4,7 @@
  * S'occupe de gérer l'affichage de la page view/search.php
  */
 $resultats = getSearchResults();
+
 $stats = getStatsFromResults($resultats);
 
 $nombre_theses = $stats['nombre_theses'];
@@ -12,7 +13,11 @@ $nombre_directeurs = $stats['nombre_directeurs'];
 $nombre_etablissements = $stats['nombre_etablissements'];
 
 $theses = createTheseFromResults($resultats); //Récupère la liste d'objets These
-
+$alert = "";
+if (isset($_SESSION["erreur_recherche"])) {
+    $alert = "<p class='text-center'>" . $_SESSION["erreur_recherche"] . "</p>";
+    unset($_SESSION["erreur_recherche"]);
+}
 
 
 /**
@@ -155,7 +160,9 @@ function getSearchResults(): array
     // if (isset($_GET["dir"]) || isset($_GET["etab"]) || isset($_GET["aut"]) || isset($_GET["mc"])) {
     //     return getResultAvances();
     // }
-
+    if (isset($_GET["random"])) {
+        return getResultRandom();
+    }
 
 
     $recherche = $_GET["search"];
@@ -310,4 +317,32 @@ function createTheseFromResults(array $results): array
         $liste[] = $these;
     }
     return $liste;
+}
+
+/**
+ * Retourne les thèses aux hasard
+ * @return array
+ */
+function getResultRandom(): array
+{
+    global $conn;
+    $nombre = $_GET["random"];
+    if (!is_numeric($nombre)) {
+        $nombre = 10;
+        $_SESSION["erreur_recherche"] = "Nombre de résultats aléatoires invalide, recherche cappée à 10 résultats";
+    } elseif ($nombre < 1) {
+        $nombre = 1;
+        $_SESSION["erreur_recherche"] = "Minimum 1 résultat de recherche";
+    } elseif ($nombre > 100) {
+        $nombre = 100;
+        $_SESSION["erreur_recherche"] = "Recherche cappée à 100 résultats";
+    }
+    $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+    $sql = "SELECT idThese, nnt FROM these ORDER BY RAND() LIMIT :nombre";
+    $sth = $conn->prepare($sql);
+    $sth->bindParam(":nombre", $nombre, PDO::PARAM_INT);
+    $sth->execute();
+    $sth = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+    return $sth;
 }
