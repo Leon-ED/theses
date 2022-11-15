@@ -153,7 +153,7 @@ function getSearchResults(): array
 
     //On vérifie que le formulaire a bien été envoyé
     if (!isset($_GET) || empty($_GET)) {
-        header("Location: ../view/index.ph");
+        header("Location: ../view/index.php");
         exit();
     }
 
@@ -164,6 +164,11 @@ function getSearchResults(): array
         return getResultRandom();
     }
 
+    if (strlen($_GET["search"]) < 3) {
+        $_SESSION["erreur_recherche"] = "La recherche doit contenir au moins 3 caractères, voici 10 thèses au hasard";
+        //refresh current page
+        return getResultRandom();
+    }
 
     $recherche = "%$_GET[search]%";
     // On fait la recherche sur les titres, la discipline et le nnt
@@ -326,10 +331,13 @@ function createTheseFromResults(array $results): array
  * Retourne les thèses aux hasard
  * @return array
  */
-function getResultRandom(): array
+function getResultRandom($default = 10): array
 {
     global $conn;
-    $nombre = $_GET["random"];
+    $nombre = $default;
+    if (isset($_GET["random"])) {
+        $nombre = $_GET["random"];
+    }
     if (!is_numeric($nombre)) {
         $nombre = 10;
         $_SESSION["erreur_recherche"] = "Nombre de résultats aléatoires invalide, recherche cappée à 10 résultats";
