@@ -15,7 +15,8 @@ Fonctionnalités : <br>
 Pour utiliser le projet :
 créer un fichier <code>credentials.php</code> ou utiliser le fichier template (à renommer) dans le dossier <code>config</code>
 comme ceci :<br>
-
+Script pour importer les données : <code>script/script_import.php</code>, fichier pour les thèses : <code>fichiers/extract_theses.json</code> <br>
+Dump de la base : <code>bdd/dump_base_donnes.sql </code><br>
 <code>
 $servername = "URL_SERVEUR";<br>
 $username = "NOM_UTILISATEUR";<br>
