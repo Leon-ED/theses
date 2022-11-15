@@ -119,14 +119,16 @@ class Etablissement extends AbstractObjet
         if (!($obj instanceof Etablissement)) {
             return false;
         }
+        if ($this->getIdRef() != null && $obj->getIdRef() != null) {
+            return $this->getIdRef() == $obj->getIdRef();
+        }
+
         if ($this->getIdBase == $obj->getIdBase()) {
             return true;
         }
-        if ($this->getIdRef() != null && $this->getIdRef() == $obj->getIdRef()) {
+        if ($this->getIdRef() == $obj->getIdRef() && $this->getName() == $obj->getName()) {
             return true;
         }
-        if ($this->getName() == $obj->getName()) {
-            return true;
-        }
+        return false;
     }
 }
