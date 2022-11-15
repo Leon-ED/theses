@@ -75,9 +75,9 @@ foreach ($data as $these) {
             $personneOBJ->insertToBase($conn);
             $liste_personnes[] = $personneOBJ;
             $resultat = $personneOBJ;
-            //Dans tous les cas on le lien entre la thèse et l'auteur
-            $resultat->insertAuteur($conn, $theseOBJ->getNNT());
         }
+        //Dans tous les cas on le lien entre la thèse et l'auteur
+        $resultat->insertAuteur($conn, $theseOBJ->getNNT());
     }
     // On boucle sur chaque Directeur de la thèse
     foreach ($these["directeurs_these"] as $directeur) {
@@ -92,9 +92,9 @@ foreach ($data as $these) {
             $personneOBJ->insertToBase($conn);
             $liste_personnes[] = $personneOBJ;
             $resultat = $personneOBJ;
-            //Dans tous les cas on le lien entre la thèse et le directeur
-            $resultat->insertDirecteur($conn, $theseOBJ->getNNT());
         }
+        //Dans tous les cas on le lien entre la thèse et le directeur
+        $resultat->insertDirecteur($conn, $theseOBJ->getNNT());
     }
 
     //On boucle sur les établissements de soutenance
