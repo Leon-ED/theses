@@ -11,8 +11,7 @@ try {
 
 <body>
     <?php require_once("../include/nav.inc.php") ?>
-
-    <h3 class="search-result-h">Résultats de recherche :</h2>
+    <h3 id="top" class="search-result-h">Résultats de recherche :</h2>
         <?= $alert ?>
         <?php require_once("../include/dashboard.inc.php"); ?>
         <h3 class="search-result-h">Thèses :</h3>
