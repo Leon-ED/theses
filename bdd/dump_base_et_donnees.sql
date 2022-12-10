@@ -7,6 +7,13 @@
 -- Version du serveur :  5.7.30-log
 -- Version de PHP :  7.0.33-0+deb9u7
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+
+/*!40101 SET NAMES utf8mb4 */;
+
 --
 -- Structure de la table `a_dirige`
 --
@@ -18280,6 +18287,3 @@ ALTER TABLE `these_sujet`
   ADD CONSTRAINT `these_sujet_ibfk_1` FOREIGN KEY (`nnt`) REFERENCES `these` (`nnt`) ON UPDATE CASCADE,
   ADD CONSTRAINT `these_sujet_ibfk_2` FOREIGN KEY (`idMot`) REFERENCES `sujets` (`idMot`) ON UPDATE CASCADE;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
