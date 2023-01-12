@@ -1,12 +1,12 @@
 <?php
 $file = "index.php";
-require_once("../config/config.php");
-require_once("../include/html.header.inc.php");
-include_once("../controller/indexController.php");
+require_once("./config/config.php");
+require_once("./include/html.header.inc.php");
+include_once("./controller/indexController.php");
 ?>
 
 <body>
-    <?php require_once("../include/nav.inc.php") ?>
+    <?php require_once("./include/nav.inc.php") ?>
 
     <h1 class="text-center" style="margin-top:1%;">Recherche des thèses françaises</h1>
     <div class="container">
@@ -23,6 +23,6 @@ include_once("../controller/indexController.php");
 </body>
 <?= $bootstrap_alert ?>
 
-<?php require_once("../include/dashboard.inc.php"); ?>
+<?php require_once("./include/dashboard.inc.php"); ?>
 
 </html>
