@@ -147,7 +147,7 @@ class Personne extends AbstractObjet
      */
     public function setTheseNNT($theseNnt)
     {
-        $this->theseNnt = $theseNnt;
+        $this->theseNNT = $theseNnt;
         return $this;
     }
 }
