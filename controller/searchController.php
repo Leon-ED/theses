@@ -153,7 +153,7 @@ function getSearchResults(): array
 
     //On vérifie que le formulaire a bien été envoyé
     if (!isset($_GET) || empty($_GET)) {
-        header("Location: ../view/index.php");
+        header("Location: ./");
         exit();
     }
 
@@ -181,6 +181,7 @@ function getSearchResults(): array
     OR discipline LIKE :recherche
     OR these.nnt LIKE :recherche
     OR dateSoutenance LIKE :recherche
+    ORDER BY dateSoutenance DESC
     ";
 
     //Recherche sur les auteurs
@@ -218,7 +219,7 @@ function getSearchResults(): array
 
     // Si elle n'a rien donné on renvoie vers la page d'accueil avec un message d'erreur
     if (empty($resultats)) {
-        header("Location: ../view/index.php?msg=aucun_resultat");
+        header("Location: ./?msg=aucun_resultat");
         exit();
     }
     return $resultats;
@@ -294,6 +295,7 @@ function getResultAvances(): array
     OR these.nnt IN (SELECT nnt FROM these_etablissement WHERE id_etablissement = :etab)
     OR these.nnt IN (SELECT nnt FROM a_ecrit WHERE idPersonne = :aut)
     OR these.nnt IN (SELECT nnt FROM mots_cle WHERE idMot = :mc)
+    ORDER BY dateSoutenance DESC
     ";
     $recherche_these = $conn->prepare($sql);
     $recherche_these->execute(array(
@@ -349,7 +351,7 @@ function getResultRandom($default = 10): array
         $_SESSION["erreur_recherche"] = "Recherche cappée à 100 résultats";
     }
     $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    $sql = "SELECT idThese, nnt FROM these ORDER BY RAND() LIMIT :nombre";
+    $sql = "SELECT idThese, nnt FROM these ORDER BY RAND() AND dateSoutenance LIMIT :nombre ";
     $sth = $conn->prepare($sql);
     $sth->bindParam(":nombre", $nombre, PDO::PARAM_INT);
     $sth->execute();

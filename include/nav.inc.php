@@ -1,6 +1,6 @@
 <!--Teamplate de la barre de navigation-->
 <?php
-if (isset($file) && $file != "index.php") { // Si on est pas sur la page d'accueil (index.html) on affiche en plus une barre de recherche
+if (isset($file) && $file != "index.php") { // Si on est pas sur la page d'accueil (index.php) on affiche en plus une barre de recherche
 ?>
     <nav class="nav-bar">
         <a href="./">
@@ -29,7 +29,7 @@ if (isset($file) && $file != "index.php") { // Si on est pas sur la page d'accue
 } else {
 ?>
     <nav class="nav-bar">
-        <a href="./index.php">
+        <a href="./">
             <h3>Theses.fr</h3>
         </a>
         <div class="d-flex w-20 align-items-center justify-content-space-evenly">

@@ -40,3 +40,25 @@ function implodeToSQL($array)
     $sql = substr($sql, 0, -1); // Enlève la dernière virgulee
     return $sql;
 }
+
+
+function clean(array $param){
+    foreach ($param as $key => $value) {
+        $param[$key] = htmlspecialchars($value);
+    }
+    return $param;
+}
+
+function printIntArray($array){
+    $i = 0;
+    $len = count($array);
+    foreach ($array as $value) {
+        if($i == $len - 1)
+            echo $value;
+        else
+            echo $value . ", ";
+
+    }
+
+
+}

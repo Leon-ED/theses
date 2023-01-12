@@ -14,12 +14,10 @@ try {
 
 $i = 0;
 
-
 $etablissements_soutenance = Etablissement::getListFromBase($conn); // Liste de tous les établissements de soutenance
 $liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les personnes
 $liste_sujets = Sujet::getListFromBase($conn); //Liste de tous les sujets
 $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
-
 //Tout importer dans la boucle principale est plus pratique mais plus lent ...
 foreach ($data as $these) {
 
