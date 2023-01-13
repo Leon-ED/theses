@@ -20,8 +20,9 @@ if (DEBUG === true) {
 }
 // require with full path
 $DIR = __DIR__;
-// REMOVE THE LAST FOLDER
-$DIR = substr($DIR, 0, strrpos($DIR, "/"));
+
+// remove the /config part
+$DIR = substr($DIR, 0, -7);
 
 require_once($DIR."/config/base.php");
 require_once($DIR."/class/AbstractClass.php");
