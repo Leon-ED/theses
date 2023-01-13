@@ -1,14 +1,22 @@
 <?php
+use \JsonMachine\Items;
+try {
 require_once("../config/config.php");
+spl_autoload_register(require '../libs/json-machine/src/autoloader.php');
 /**
  * Module s'occupant de lire le fichier JSON et d'importer toutes les données
  * dans la base
  */
 
-try {
-    $file = file_get_contents("../fichiers/extract_theses.json");
-    $data = json_decode($file, true);
+
+    // $file = file_get_contents("../fichiers/extract_theses.json");
+    // $data = json_decode($file, true);
+    $data = Items::fromFile('../fichiers/theses-soutenues.json'
+
+);
+
 } catch (Exception $e) {
+    echo $e->getMessage();
     die("Une erreur a eu lieu lors de la lecture du fichier JSON");
 }
 
@@ -19,9 +27,9 @@ $liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les pers
 $liste_sujets = Sujet::getListFromBase($conn); //Liste de tous les sujets
 $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
 //Tout importer dans la boucle principale est plus pratique mais plus lent ...
+try {
 foreach ($data as $these) {
-
-
+    $these = (array) $these;
     // En local pour tester sans importer toute la data.
     if (DEBUG === true) {
         $i++;
@@ -141,5 +149,10 @@ foreach ($data as $these) {
     }
 }
 if (!DEBUG) {
-    header("Location: ../view/index.php");
+    header("Location: ../");
+}
+
+}
+catch (Exception $e) {
+    echo $e->getMessage();
 }

@@ -18,12 +18,16 @@ if (DEBUG === true) {
     ini_set('display_errors', 0);
     ini_set('display_startup_errors', 0);
 }
+// require with full path
+$DIR = __DIR__;
+// REMOVE THE LAST FOLDER
+$DIR = substr($DIR, 0, strrpos($DIR, "/"));
 
-require_once("./config/base.php");
-require_once("./class/AbstractClass.php");
-require_once("./class/Sujet.php");
-require_once("./class/These.php");
-require_once("./class/Personne.php");
-require_once("./script/functions.php");
-require_once("./class/Etablissement.php");
+require_once($DIR."/config/base.php");
+require_once($DIR."/class/AbstractClass.php");
+require_once($DIR."/class/Sujet.php");
+require_once($DIR."/class/These.php");
+require_once($DIR."/class/Personne.php");
+require_once($DIR."/script/functions.php");
+require_once($DIR."/class/Etablissement.php");
 //gwadz

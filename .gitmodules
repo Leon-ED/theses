@@ -1,0 +1,3 @@
+[submodule "libs/libs/json-machine"]
+	path = libs/libs/json-machine
+	url = https://github.com/halaxa/json-machine.git
