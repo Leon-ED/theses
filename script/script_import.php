@@ -30,6 +30,7 @@ $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
 try {
 foreach ($data as $these) {
     $these = (array) $these;
+    
     // En local pour tester sans importer toute la data.
     if (DEBUG === true) {
         $i++;
