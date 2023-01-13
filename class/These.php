@@ -70,18 +70,18 @@ class These
         return $this;
     }
 
-    /**
-     * Mets les auteurs de la thèse (nom et prénom)
-     * @param string $nomAuteur Nom de l'auteur
-     * @param string $prenomAuteur Prénom de l'auteur
-     * @return these
-     */
-    public function setAuteur($nom, $prenom)
-    {
-        $this->nomAuteur = $nom;
-        $this->prenomAuteur = $prenom;
-        return $this;
-    }
+    // /**
+    //  * Mets les auteurs de la thèse (nom et prénom)
+    //  * @param string $nomAuteur Nom de l'auteur
+    //  * @param string $prenomAuteur Prénom de l'auteur
+    //  * @return these
+    //  */
+    // public function setAuteur($nom, $prenom)
+    // {
+    //     $this->nomA = $nom;
+    //     $this->prenomAuteur = $prenom;
+    //     return $this;
+    // }
 
     /**
      * Mets la date de soutenance de la thèse
@@ -90,6 +90,7 @@ class These
      */
     public function setDateSoutenance($date)
     {
+        $date = date('Y-m-d', strtotime($date));
         $this->dateSoutance = $date;
         return $this;
     }

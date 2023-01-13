@@ -1,5 +1,8 @@
 <?php
 use \JsonMachine\Items;
+//max exec time 20 minutes
+ini_set('max_execution_time', '0');
+set_time_limit(0);
 try {
 require_once("../config/config.php");
 spl_autoload_register(require '../libs/json-machine/src/autoloader.php');
@@ -14,7 +17,6 @@ spl_autoload_register(require '../libs/json-machine/src/autoloader.php');
     $data = Items::fromFile('../fichiers/theses-soutenues.json'
 
 );
-
 } catch (Exception $e) {
     echo $e->getMessage();
     die("Une erreur a eu lieu lors de la lecture du fichier JSON");
@@ -26,8 +28,11 @@ $liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les pers
 $liste_sujets = Sujet::getListFromBase($conn); //Liste de tous les sujets
 $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
 //Tout importer dans la boucle principale est plus pratique mais plus lent ...
-try {
+
+
 foreach ($data as $these) {
+    try {
+    global $these;
     // En local pour tester sans importer toute la data.
     if (DEBUG === true) {
         $i++;
@@ -35,7 +40,6 @@ foreach ($data as $these) {
             break;
         }
     }
-
     // On vérifie que la thèse n'est pas déjà présente dans la base de données
     if (in_array($these->nnt, $liste_NNT)) {
         continue;
@@ -54,7 +58,7 @@ foreach ($data as $these) {
     $theseOBJ
         ->setTitre($titre["fr"], $titre["en"])
         ->setResume($resume["fr"], $resume["en"])
-        ->setAuteur($auteur["nom"], $auteur["prenom"])
+        // ->setAuteur($auteur["nom"], $auteur["prenom"])
         ->setDateSoutenance($these->date_soutenance)
         ->setLangueThese($these->langue)
         ->setSoutenue("oui")
@@ -69,7 +73,7 @@ foreach ($data as $these) {
 
 
     // On boucle sur chaque Auteur de la thèse
-    foreach ($these->auteur as $auteur) {
+    foreach ($these->auteurs as $auteur) {
         $personneOBJ = new Personne();
         $personneOBJ
             ->setNom($auteur->nom)
@@ -144,12 +148,17 @@ foreach ($data as $these) {
         // On ajoute le lien entre la thèse et le sujet
         $sujetOBJ->insertSujet($conn, $theseOBJ->getNNT());
     }
-}
+
 if (!DEBUG) {
     header("Location: ../");
 }
+}catch (Exception $e) {
+    echo $theseOBJ->getNNT();
+    echo "<br";
+    echo $e->getMessage();
+    echo "<br";
 
 }
-catch (Exception $e) {
-    echo $e->getMessage();
+
 }
+
