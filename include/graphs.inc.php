@@ -7,6 +7,87 @@ $nonDisponibleAnnees = $ratioAccessibleAnnees["non_disponible"];
 $nombreCumulAnnees = getCumulThesesAnnees($conn, $listeAnnees);
 $sujetsCompte = getCompteMotsCles($conn);
 ?>
+<style>
+
+
+    #graphs-container {
+        margin-left: 2rem;
+        margin-right: 2rem;
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 10px;
+    }
+    /* on each line put 2 graph */
+    #graphs-container>section:nth-child(2n+1) {
+        grid-column: 1/2;
+
+    }
+
+    #graphs-container>section:nth-child(2n) {
+        grid-column: 2/3;
+    }
+
+
+
+
+    /**even childs */
+    #graphs-container>section:nth-child(even) {
+        background-color: #f5f5f5;
+    }
+
+    /**odd childs */
+    #graphs-container>section:nth-child(odd) {
+        background-color: #fff;
+    }
+
+
+    .graph {
+        border-radius: 5px;
+        grid-column: 1/2;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .graph::after {
+        content: " ";
+        display: block;
+    }
+
+
+    @media (max-width: 768px) {
+        #graphs-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            padding: 2px;
+            margin: 2px;
+
+        }
+        #graphs-container>section:nth-child(2n+1) {
+            grid-column: 1/2;
+            grid-row: 1/2;
+        }
+
+        #graphs-container>section:nth-child(2n) {
+            grid-column: 1/2;
+            grid-row: 2/3;
+        }
+
+        #graphs-container>section:nth-child(3n) {
+            grid-column: 1/2;
+            grid-row: 3/4;
+        }
+
+        #graphs-container>section:nth-child(4n) {
+            grid-column: 1/2;
+            grid-row: 4/5;
+        }
+    }
+        
+    
+
+
+</style>
 <article id="graphs-container">
     <section class="graph" id="sec_camembert"></section>
     <section class="graph" id="sec_enligne-annees"></section>
@@ -132,7 +213,7 @@ $sujetsCompte = getCompteMotsCles($conn);
 <script defer>
     Highcharts.chart('sec_enligne-cumul-annees', {
         chart: {
-            type: 'column'
+            type: 'line'
         },
         exporting: {
             enabled: true
@@ -231,41 +312,3 @@ $sujetsCompte = getCompteMotsCles($conn);
 
 </script>
 
-<style>
-    #sec_camembert {
-        grid-column: 1fr;
-        grid-row: 1;
-    }
-
-    #sec_enligne-annees {
-        grid-row: 1fr;
-        grid-column: 1/4;
-    }
-
-    #graphs-container {
-        display: grid;
-        /* lines of  */
-    }
-
-    /**even childs */
-    #graphs-container>section:nth-child(even) {
-        background-color: #f5f5f5;
-    }
-
-    /**odd childs */
-    #graphs-container>section:nth-child(odd) {
-        background-color: #fff;
-    }
-
-
-    .graph {
-        border-radius: 5px;
-        grid-column: 1/2;
-        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .graph::after {
-        content: " ";
-        display: block;
-    }
-</style>
