@@ -27,5 +27,5 @@ $graphsController = new GraphsController();
 
 <?php require_once("./include/dashboard.inc.php"); ?>
 <?php require_once("./include/graphs.inc.php"); ?>
-
+<?php require_once("./include/footer.inc.php"); ?>
 </html>

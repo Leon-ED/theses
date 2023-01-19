@@ -26,6 +26,8 @@ $graphsController = new GraphsController(true, $theses);
             <?php echoThese($theses); ?>
         </section>
         <button id="retour"><a href="#top" style="color: white">Retour en haut</a></button>
+<?php require_once("./include/footer.inc.php"); ?>
+
 </body>
 
 
