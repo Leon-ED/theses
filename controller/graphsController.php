@@ -66,7 +66,7 @@ function getCumulThesesAnnees(PDO $conn, $listeAnnees){
 
 function getListeAnnees(PDO $conn)
 {
-    $sql = "SELECT DISTINCT YEAR(datesoutenance) annee FROM these ORDER BY datesoutenance ASC";
+    $sql = "SELECT DISTINCT YEAR(datesoutenance) annee FROM these ORDER BY annee ASC";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_COLUMN);

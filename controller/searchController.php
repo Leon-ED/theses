@@ -173,7 +173,7 @@ function getSearchResults(): array
     $recherche = "%$_GET[search]%";
     // On fait la recherche sur les titres, la discipline et le nnt
     $sql = "
-    SELECT DISTINCT these.idThese, these.nnt FROM these
+    SELECT DISTINCT these.idThese, these.nnt,these.dateSoutenance FROM these
     WHERE titre_fr LIKE :recherche
     OR resume_fr LIKE :recherche
     OR resume_en LIKE :recherche
@@ -290,7 +290,7 @@ function getResultAvances(): array
     if (isset($_GET["mc"])) {
         $mc = $_GET["mc"];
     }
-    $sql = "SELECT DISTINCT these.idThese, these.nnt FROM these
+    $sql = "SELECT DISTINCT these.idThese, these.nnt,these.dateSoutenance FROM these
     WHERE these.nnt IN (SELECT nnt FROM a_dirige WHERE idPersonne = :dir)
     OR these.nnt IN (SELECT nnt FROM these_etablissement WHERE id_etablissement = :etab)
     OR these.nnt IN (SELECT nnt FROM a_ecrit WHERE idPersonne = :aut)
