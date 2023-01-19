@@ -85,7 +85,7 @@ class GraphsController
         );
     }
 
-    function getCumulThesesAnnees(PDO $conn, $listeAnnees, $searchResults = null)
+    function getCumulThesesAnnees(PDO $conn, $listeAnnees)
     {
         $total = 0;
         $listeTotal = array();
@@ -135,7 +135,7 @@ class GraphsController
         return $result;
     }
 
-    function getCompteMotsCles(PDO $conn, $searhResults)
+    function getCompteMotsCles(PDO $conn)
     {
         if(!$this->fromSearch){
             $sql = "SELECT mot, COUNT(ts.idMot) as nb FROM these_sujet as ts,sujets WHERE ts.idMot = sujets.idMot GROUP BY ts.idMot ORDER BY nb DESC LIMIT 100";
