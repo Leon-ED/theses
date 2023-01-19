@@ -173,7 +173,7 @@ function getSearchResults(): array
     $recherche = "%$_GET[search]%";
     // On fait la recherche sur les titres, la discipline et le nnt
     $sql = "
-    SELECT DISTINCT these.idThese, these.nnt,these.dateSoutenance FROM these
+    SELECT DISTINCT these.idThese, these.nnt,these.dateSoutenance,these.estAccessible FROM these
     WHERE titre_fr LIKE :recherche
     OR resume_fr LIKE :recherche
     OR resume_en LIKE :recherche
@@ -323,7 +323,8 @@ function createTheseFromResults(array $results): array
         $these = new These();
         $these->setTheseId($result["idThese"])
             ->setNnt($result["nnt"])
-            ->setInfosThese($conn);
+            ->setInfosThese($conn)
+            ->setAccessible($result["estAccessible"]);
         $liste[] = $these;
     }
     return $liste;
