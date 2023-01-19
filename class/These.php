@@ -164,8 +164,20 @@ class These
      */
     public function setAccessible($accessible)
     {
-        $this->estAccessible = strcmp($accessible, "oui") == 0 ? 1 : 0;
+        if($accessible == "oui" || $accessible == "non")
+            $this->estAccessible = strcmp($accessible, "oui") == 0 ? 1 : 0;
+        else
+            $this->estAccessible = (int) $accessible;
         return $this;
+    }
+
+    /**
+     * Renvoie si la thèse est accessible ou non
+     * @return bool
+     */
+    public function estAccessible()
+    {
+        return $this->estAccessible;
     }
 
 
@@ -301,10 +313,10 @@ class These
      * Retourne la date de la soutenance formatée (jj/mm/aaaa)
      * @return string Date de la soutenance
      */
-    function getDateSoutenance(): string
+    function getDateSoutenance($format = "d/m/Y"): string
     {
         $date = new DateTime($this->dateSoutance);
-        return $date->format("d/m/Y");
+        return $date->format($format);
     }
 
     /**
