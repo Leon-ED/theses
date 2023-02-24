@@ -39,7 +39,7 @@ function getStatsTheses(): array
     $sth = $conn->prepare($sql);
     $sth->execute();
     $stats["nombre_theses"] = $sth->fetch()["nombre_theses"];
-
+    
     // Nombre d'établissements
     $sql = "SELECT COUNT(*) AS nombre_etablissements FROM etablissement";
     $sth = $conn->prepare($sql);
@@ -59,5 +59,9 @@ function getStatsTheses(): array
     $sth = $conn->prepare($sql);
     $sth->execute();
     $stats["nombre_auteurs"] = $sth->fetch()["nombre_auteurs"];
+
+    foreach ($stats as $key => $value) {
+        $stats[$key] = number_format($value, 0, ',', ' ');
+    }
     return $stats;
 }

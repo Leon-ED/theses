@@ -292,7 +292,7 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
                 <?php
                 foreach ($sujetsCompte as $mot) {
                     echo '{
-                        name : "'.htmlentities($mot["mot"]) .'",
+                        name : "'.addslashes($mot["mot"]) .'",
                         weight : "'.$mot["nb"].'"
                     },';
 
