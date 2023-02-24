@@ -1,13 +1,15 @@
 <?php
 $ratioAccessible = $graphsController->getRatioAccessible($conn);
-$listeAnnees =  $graphsController->getListeAnnees($conn);
-$ratioAccessibleAnnees =  $graphsController->getRatioAccessibleAnnees($conn, $listeAnnees);
+$listeAnnees = $graphsController->getListeAnnees($conn);
+$ratioAccessibleAnnees = $graphsController->getRatioAccessibleAnnees($conn, $listeAnnees);
 $disponibleAnnees = $ratioAccessibleAnnees["disponible"];
 $nonDisponibleAnnees = $ratioAccessibleAnnees["non_disponible"];
-$nombreCumulAnnees =  $graphsController->getCumulThesesAnnees($conn, $listeAnnees);
-$sujetsCompte =  $graphsController->getCompteMotsCles($conn);
+$nombreCumulAnnees = $graphsController->getCumulThesesAnnees($conn, $listeAnnees);
+$sujetsCompte = $graphsController->getCompteMotsCles($conn);
 ?>
 <style>
+
+
     #graphs-container {
         margin-left: 2rem;
         margin-right: 2rem;
@@ -17,7 +19,6 @@ $sujetsCompte =  $graphsController->getCompteMotsCles($conn);
         grid-template-rows: 1fr 1fr;
         grid-gap: 10px;
     }
-
     /* on each line put 2 graph */
     #graphs-container>section:nth-child(2n+1) {
         grid-column: 1/2;
@@ -62,7 +63,6 @@ $sujetsCompte =  $graphsController->getCompteMotsCles($conn);
             margin: 2px;
 
         }
-
         #graphs-container>section:nth-child(2n+1) {
             grid-column: 1/2;
             grid-row: 1/2;
@@ -83,6 +83,10 @@ $sujetsCompte =  $graphsController->getCompteMotsCles($conn);
             grid-row: 4/5;
         }
     }
+        
+    
+
+
 </style>
 <article id="graphs-container">
     <section class="graph" id="sec_camembert"></section>
@@ -215,7 +219,7 @@ $sujetsCompte =  $graphsController->getCompteMotsCles($conn);
             enabled: true
         },
         title: {
-            text: 'Cumul du nombre de thèses par année'
+            text: 'Cumum du nombre de thèses par année'
         },
         xAxis: {
             categories: [
@@ -254,26 +258,30 @@ $sujetsCompte =  $graphsController->getCompteMotsCles($conn);
             }
         },
         series: [{
-            name: 'Thèses ',
-            data: [<?php printIntArray($nombreCumulAnnees); ?>]
+                name: 'Thèses ',
+                data: [<?php printIntArray($nombreCumulAnnees); ?>]
 
-        }]
+            }
+        ]
     });
 </script>
 
 <script defer>
+// chart word cloud 
+
     Highcharts.chart('sec_nuage-mots_cles', {
         chart: {
             type: 'wordcloud',
+            backgroundColor: 'transparent',
             style: {
-                fontFamily: 'Arial'
+                fontFamily: 'sans-serif'
             }
         },
         exporting: {
             enabled: true
         },
         title: {
-            text: 'Sujets les plus fréquents'
+            text: 'Mots les plus utilisés dans les thèses'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.weight:.1f}</b>'
@@ -284,9 +292,10 @@ $sujetsCompte =  $graphsController->getCompteMotsCles($conn);
                 <?php
                 foreach ($sujetsCompte as $mot) {
                     echo '{
-                        name : "' . htmlentities($mot["mot"]) . '",
-                        weight : "' . $mot["nb"] . '"
+                        name : "'.htmlentities($mot["mot"]) .'",
+                        weight : "'.$mot["nb"].'"
                     },';
+
                 }
                 ?>
             ],
@@ -300,4 +309,6 @@ $sujetsCompte =  $graphsController->getCompteMotsCles($conn);
             }
         },
     });
+
 </script>
+
