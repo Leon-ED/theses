@@ -219,7 +219,7 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
             enabled: true
         },
         title: {
-            text: 'Cumum du nombre de thèses par année'
+            text: 'Cumul du nombre de thèses par année'
         },
         xAxis: {
             categories: [
