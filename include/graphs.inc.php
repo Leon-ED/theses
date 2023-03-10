@@ -1,4 +1,5 @@
 <?php
+$time = time();
 $ratioAccessible = $graphsController->getRatioAccessible($conn);
 $listeAnnees = $graphsController->getListeAnnees($conn);
 $ratioAccessibleAnnees = $graphsController->getRatioAccessibleAnnees($conn, $listeAnnees);
@@ -316,4 +317,3 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
     });
 
 </script>
-

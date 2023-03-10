@@ -6,11 +6,28 @@ class GraphsController
 
     private $fromSearch = false;
     private $searchResults = null;
+    private $nombreTheses = 0;
 
     public function __construct($fromSearch = false, $searchResults = null)
     {
         $this->fromSearch = $fromSearch;
         $this->searchResults = $searchResults;
+        if ($fromSearch) {
+            $this->nombreTheses = count($searchResults);
+        }
+
+    }
+
+    function getNombreTheses(PDO $conn)
+    {
+        if (!$this->fromSearch) {
+            $sql = "SELECT COUNT(*) as total FROM these";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["total"];
+        } else {
+            return count($this->searchResults);
+        }
     }
 
     function getRatioAccessible(PDO $conn)
@@ -23,10 +40,8 @@ class GraphsController
             $stmt->execute();
             $disponible = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["disponible"];
 
-            $sql = "SELECT COUNT(*) as non_disponible FROM these WHERE estAccessible = 0";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $non_disponible = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["non_disponible"];
+            $non_disponible = $this->getNombreTheses($conn) - $disponible;
+
         } else {
             foreach ($this->searchResults as $these) {
                 if ($these->estAccessible()) {
@@ -46,25 +61,29 @@ class GraphsController
         $listeDisponible = array();
         $listeNonDisponible = array();
         if (!$this->fromSearch) {
-            foreach ($listeAnnees as $annee) {
-                $sql = "SELECT COUNT(*) as disponible FROM these WHERE estAccessible = 1 AND YEAR(datesoutenance) = :annee";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute(array(":annee" => $annee));
-                $disponible = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["disponible"];
+            $sql = "SELECT 
+            YEAR(dateSoutenance) AS annee,
+            SUM(CASE WHEN estAccessible = 1 THEN 1 ELSE 0 END) AS nb_theses_disponibles,
+            SUM(CASE WHEN estAccessible = 0 THEN 1 ELSE 0 END) AS nb_theses_non_disponibles
+          FROM 
+            these
+          GROUP BY 
+            YEAR(dateSoutenance)
+          ORDER BY annee ASC";
 
-                $sql = "SELECT COUNT(*) as non_disponible FROM these WHERE estAccessible = 0 AND YEAR(datesoutenance) = :annee";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute(array(":annee" => $annee));
-                $non_disponible = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["non_disponible"];
 
-                $listeDisponible[] = $disponible;
-                $listeNonDisponible[] = $non_disponible;
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $resultats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // echo $annee . " : " . $disponible . " / " . $non_disponible . "
-                // <br>";
+            foreach($resultats as $resultat){
+                $listeDisponible[] = $resultat["nb_theses_disponibles"];
+                $listeNonDisponible[] = $resultat["nb_theses_non_disponibles"];
             }
+
         }else{
             foreach ($listeAnnees as $annee) {
+
                 $disponible = 0;
                 $non_disponible = 0;
                 foreach ($this->searchResults as $these) {
@@ -90,18 +109,19 @@ class GraphsController
         $total = 0;
         $listeTotal = array();
         if(!$this->fromSearch){
-        foreach ($listeAnnees as $annee) {
-            $sql = "SELECT COUNT(*) as total FROM these WHERE YEAR(datesoutenance) = :annee";
+            $sql = "SELECT COUNT(*) AS nombre_theses
+            FROM these
+            GROUP BY YEAR(dateSoutenance)
+            ORDER BY YEAR(dateSoutenance) ASC;
+            ";
             $stmt = $conn->prepare($sql);
-            $stmt->execute(array(":annee" => $annee));
-            $total_annee = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["total"];
-            $total += $total_annee;
-            $listeTotal[] = $total;
-
-
-            // echo $annee . " : " . $disponible . " / " . $non_disponible . "
-            // <br>";
-        }
+            $stmt->execute();
+            $resultats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            array_map(function($resultat) use (&$total, &$listeTotal){
+                $total += $resultat["nombre_theses"];
+                $listeTotal[] = $total;
+            }, $resultats);
+            
     }else{
         foreach ($listeAnnees as $annee) {
             $total_annee = 0;
