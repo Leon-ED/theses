@@ -39,11 +39,11 @@ function echoThese(array $listeThese)
             <div class="these-card-header">
                 <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= htmlspecialchars($these->getTitre()); ?></a></h2>
                 <div class="these-card-infos">
-                    <p>par <span class="these-card-author"><a href="#"><?= echoAuteurs($these); ?></a></p>
-                    <p>le : <span class="these-card-date"><?= htmlspecialchars($these->getDateSoutenance()) ?></span></p>
                 </div>
             </div>
             <div class="these-card-body">
+                <p>Auteur·rice <a href="#"><?= echoAuteurs($these); ?></p>
+                <p> Soutenue le <?= $these->getDateSoutenance() ?> </p>
                 <p>Sous la direction de : <a href="#"><span><?= echoDirecteurs($these); ?></span></a> </p>
                 <p>Discipline: <a href="#"><?= htmlspecialchars($these->getDiscine()) ?></a> </p>
                 <p>Établissement : <a href="#"><?= echoEtablissements($these) ?></a> </p>

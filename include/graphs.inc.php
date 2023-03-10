@@ -88,12 +88,15 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
 
 
 </style>
+<details <?php if(isset($file) && $file === "index.php") echo "open"; ?>>
+    <summary><h3 class="search-result-h">Graphiques</h3></summary>
 <article id="graphs-container">
     <section class="graph" id="sec_camembert"></section>
     <section class="graph" id="sec_enligne-annees"></section>
     <section class="graph" id="sec_enligne-cumul-annees"></section>
     <section class="graph" id="sec_nuage-mots_cles"></section>
 </article>
+</details>
 
 
 <script defer>
@@ -291,6 +294,8 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
             data: [
                 <?php
                 foreach ($sujetsCompte as $mot) {
+                    // cut the string to 15 characters and add '...' if it is longer
+                    $mot["mot"] = substr($mot["mot"], 0, 15) . (strlen($mot["mot"]) > 15 ? '...' : '');
                     echo '{
                         name : "'.addslashes($mot["mot"]) .'",
                         weight : "'.$mot["nb"].'"
