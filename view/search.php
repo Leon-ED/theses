@@ -16,11 +16,11 @@ $graphsController = new GraphsController(true, $theses);
 
 <body>
     <?php require_once("./include/nav.inc.php"); ?>
-    <h3 id="top" class="search-result-h">Résultats de recherche :</h2>
+    <h3 id="top" class="search-result-h">Votre recherche</h2>
         <?= $alert ?>
         <?php require_once("./include/dashboard.inc.php"); ?>
         <?php require_once("./include/graphs.inc.php"); ?>
-        <h3 class="search-result-h">Thèses :</h3>
+        <h3 class="search-result-h">Thèses</h3>
         <!-- Section qui contient les résultats de la recherche -->
         <section class="these-list">
             <?php echoThese($theses); ?>
