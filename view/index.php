@@ -3,7 +3,8 @@ $file = "index.php";
 require_once("./config/config.php");
 require_once("./include/html.header.inc.php");
 include_once("./controller/indexController.php");
-require_once("./controller/graphsController.php")
+require_once("./controller/graphsController.php");
+$graphsController = new GraphsController();
 ?>
 
 <body>
@@ -24,7 +25,7 @@ require_once("./controller/graphsController.php")
 </body>
 <?= $bootstrap_alert ?>
 
-<?php require_once("./include/dashboard.inc.php"); ?>
+<?php  require_once("./include/dashboard.inc.php"); ?>
 <?php require_once("./include/graphs.inc.php"); ?>
-
+<?php require_once("./include/footer.inc.php"); ?>
 </html>

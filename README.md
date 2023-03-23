@@ -1,7 +1,7 @@
 # Projet Thèses
 Les fichiers
 <code>credentials.php , .htpasswd et .htaccess </code>ne sont pas push sur le Git<br>
-URL : https://perso-etudiant.u-pem.fr/~leon.edmee/theses/<br>
+URL : https://theses.edmeeleon.fr/<br>
 LOGIN : dans le sujet<br>
 PASSWORD : dans le sujet<br>
 

@@ -73,13 +73,13 @@ class Etablissement extends AbstractObjet
         if (parent::getIdRef() == null) {
             $UpdateEtablissementStmt = $conn->prepare("UPDATE etablissement SET nom= :nom WHERE nom= :nom AND idRef IS NULL");
             $UpdateEtablissementStmt->execute(array(
-                ":nom" => $this->nom,
+                ":nom" => $this->name,
             ));
             return;
         }
         $UpdateEtablissementStmt = $conn->prepare("UPDATE etablissement SET nom= :nom WHERE nom= :nom AND idRef = ?");
         $UpdateEtablissementStmt->execute(array(
-            ":nom" => $this->nom,
+            ":nom" => $this->name,
             ":idRef" => $this->getIdRef()
         ));
     }
@@ -123,7 +123,7 @@ class Etablissement extends AbstractObjet
             return $this->getIdRef() == $obj->getIdRef();
         }
 
-        if ($this->getIdBase == $obj->getIdBase()) {
+        if (parent::getIdBase() == $obj->getIdBase()) {
             return true;
         }
         if ($this->getIdRef() == $obj->getIdRef() && $this->getName() == $obj->getName()) {

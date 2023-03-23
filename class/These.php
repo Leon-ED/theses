@@ -70,18 +70,18 @@ class These
         return $this;
     }
 
-    /**
-     * Mets les auteurs de la thèse (nom et prénom)
-     * @param string $nomAuteur Nom de l'auteur
-     * @param string $prenomAuteur Prénom de l'auteur
-     * @return these
-     */
-    public function setAuteur($nom, $prenom)
-    {
-        $this->nomAuteur = $nom;
-        $this->prenomAuteur = $prenom;
-        return $this;
-    }
+    // /**
+    //  * Mets les auteurs de la thèse (nom et prénom)
+    //  * @param string $nomAuteur Nom de l'auteur
+    //  * @param string $prenomAuteur Prénom de l'auteur
+    //  * @return these
+    //  */
+    // public function setAuteur($nom, $prenom)
+    // {
+    //     $this->nomA = $nom;
+    //     $this->prenomAuteur = $prenom;
+    //     return $this;
+    // }
 
     /**
      * Mets la date de soutenance de la thèse
@@ -90,6 +90,7 @@ class These
      */
     public function setDateSoutenance($date)
     {
+        $date = date('Y-m-d', strtotime($date));
         $this->dateSoutance = $date;
         return $this;
     }
@@ -163,8 +164,20 @@ class These
      */
     public function setAccessible($accessible)
     {
-        $this->estAccessible = strcmp($accessible, "oui") == 0 ? 1 : 0;
+        if($accessible == "oui" || $accessible == "non")
+            $this->estAccessible = strcmp($accessible, "oui") == 0 ? 1 : 0;
+        else
+            $this->estAccessible = (int) $accessible;
         return $this;
+    }
+
+    /**
+     * Renvoie si la thèse est accessible ou non
+     * @return bool
+     */
+    public function estAccessible()
+    {
+        return $this->estAccessible;
     }
 
 
@@ -300,10 +313,10 @@ class These
      * Retourne la date de la soutenance formatée (jj/mm/aaaa)
      * @return string Date de la soutenance
      */
-    function getDateSoutenance(): string
+    function getDateSoutenance($format = "d/m/Y"): string
     {
         $date = new DateTime($this->dateSoutance);
-        return $date->format("d/m/Y");
+        return $date->format($format);
     }
 
     /**

@@ -71,6 +71,8 @@ class Personne extends AbstractObjet
         }
         if (parent::getIdBase() == $obj->getIdBase())
             return true;
+        if($this->getIdRef() != null && $obj->getIdRef() == $this->getIdRef())
+            return true;
         return $this->nom == $obj->getNom() && $this->prenom == $obj->getPrenom() && parent::getIdRef() == $obj->getIdRef();
     }
 

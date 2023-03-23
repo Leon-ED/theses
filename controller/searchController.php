@@ -39,15 +39,15 @@ function echoThese(array $listeThese)
             <div class="these-card-header">
                 <h2 class="these-card-title"><a href="<?= $these->getLink() ?>"><?= htmlspecialchars($these->getTitre()); ?></a></h2>
                 <div class="these-card-infos">
-                    <p>par <span class="these-card-author"><a href="#"><?= echoAuteurs($these); ?></a></p>
-                    <p>le : <span class="these-card-date"><?= htmlspecialchars($these->getDateSoutenance()) ?></span></p>
                 </div>
             </div>
             <div class="these-card-body">
-                <p>Sous la direction de : <a href="#"><span><?= echoDirecteurs($these); ?></span></a> </p>
-                <p>Discipline: <a href="#"><?= htmlspecialchars($these->getDiscine()) ?></a> </p>
-                <p>Établissement : <a href="#"><?= echoEtablissements($these) ?></a> </p>
-                <p>Mots-clés: <?php echoTheseMotsCles($these) ?> </p>
+                <p>Auteur·rice <a href="#"><?= echoAuteurs($these); ?></a></p>
+                <p>Sous la direction de <a href="#"><span><?= echoDirecteurs($these); ?></span></a> </p>
+                <p>Discipline <a href="#"><?= htmlspecialchars($these->getDiscine()) ?></a> </p>
+                <p>Établissement <a href="#"><?= echoEtablissements($these) ?></a> </p>
+                <p>Mots-clés <?php echoTheseMotsCles($these) ?> </p>
+                <p>Soutenue le <span class="these-card-date"><?= htmlspecialchars($these->getDateSoutenance()) ?>
             </div>
         </div>
 
@@ -164,7 +164,7 @@ function getSearchResults(): array
         return getResultRandom();
     }
 
-    if (strlen($_GET["search"]) < 3) {
+    if (strlen($_GET["search"]) < -1) {
         $_SESSION["erreur_recherche"] = "La recherche doit contenir au moins 3 caractères, voici 10 thèses au hasard";
         //refresh current page
         return getResultRandom();
@@ -173,28 +173,20 @@ function getSearchResults(): array
     $recherche = "%$_GET[search]%";
     // On fait la recherche sur les titres, la discipline et le nnt
     $sql = "
-    SELECT DISTINCT these.idThese, these.nnt FROM these
+    SELECT DISTINCT these.idThese, these.nnt, these.dateSoutenance, these.estAccessible
+    FROM these
+    LEFT JOIN a_ecrit ON these.nnt = a_ecrit.nnt
+    LEFT JOIN personne ON a_ecrit.idPersonne = personne.idPersonne
     WHERE titre_fr LIKE :recherche
-    OR resume_fr LIKE :recherche
-    OR resume_en LIKE :recherche
-    OR titre_en LIKE :recherche
-    OR discipline LIKE :recherche
-    OR these.nnt LIKE :recherche
-    OR dateSoutenance LIKE :recherche
+      OR discipline LIKE :recherche
+      OR these.nnt LIKE :recherche
+      OR resume_fr LIKE :recherche
+      OR prenomPersonne LIKE :recherche
+      OR personne.nomPersonne LIKE :recherche
+      OR CONCAT_WS(' ', personne.nomPersonne, personne.prenomPersonne) LIKE :recherche
+      OR CONCAT_WS(' ', personne.prenomPersonne, personne.nomPersonne) LIKE :recherche
     ORDER BY dateSoutenance DESC
-    ";
-
-    //Recherche sur les auteurs
-    $sql2 = "
-    SELECT these.nnt,
-       these.idThese
-        FROM these
-        INNER JOIN a_ecrit ON these.nnt = a_ecrit.nnt
-        INNER JOIN personne ON a_ecrit.idPersonne = personne.idPersonne
-        WHERE prenomPersonne = :recherche
-        OR personne.nomPersonne = :recherche
-        OR CONCAT_WS(' ', personne.nomPersonne, personne.prenomPersonne) = :recherche
-        OR CONCAT_WS(' ', personne.prenomPersonne, personne.nomPersonne) = :recherche
+    
     ";
 
     // On exécute les requêtes
@@ -203,18 +195,9 @@ function getSearchResults(): array
         "recherche" => $recherche,
     ));
     $recherche_these->execute();
-    $recherche_these = $recherche_these->fetchAll(PDO::FETCH_ASSOC);
+    $resultats = $recherche_these->fetchAll(PDO::FETCH_ASSOC);
 
 
-    $recherche_auteur = $conn->prepare($sql2);
-    $recherche_auteur->execute(array(
-        "recherche" => $recherche
-    ));
-    $recherche_auteur->execute();
-    $recherche_auteur = $recherche_auteur->fetchAll(PDO::FETCH_ASSOC);
-
-    // On fusionne les résultats
-    $resultats = array_merge($recherche_these, $recherche_auteur);
 
 
     // Si elle n'a rien donné on renvoie vers la page d'accueil avec un message d'erreur
@@ -290,7 +273,7 @@ function getResultAvances(): array
     if (isset($_GET["mc"])) {
         $mc = $_GET["mc"];
     }
-    $sql = "SELECT DISTINCT these.idThese, these.nnt FROM these
+    $sql = "SELECT DISTINCT these.idThese, these.nnt,these.dateSoutenance FROM these
     WHERE these.nnt IN (SELECT nnt FROM a_dirige WHERE idPersonne = :dir)
     OR these.nnt IN (SELECT nnt FROM these_etablissement WHERE id_etablissement = :etab)
     OR these.nnt IN (SELECT nnt FROM a_ecrit WHERE idPersonne = :aut)
@@ -323,7 +306,8 @@ function createTheseFromResults(array $results): array
         $these = new These();
         $these->setTheseId($result["idThese"])
             ->setNnt($result["nnt"])
-            ->setInfosThese($conn);
+            ->setInfosThese($conn)
+            ->setAccessible($result["estAccessible"]);
         $liste[] = $these;
     }
     return $liste;
