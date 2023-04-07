@@ -8,7 +8,13 @@ $nonDisponibleAnnees = $ratioAccessibleAnnees["non_disponible"];
 $nombreCumulAnnees = $graphsController->getCumulThesesAnnees($conn, $listeAnnees);
 $sujetsCompte = $graphsController->getCompteMotsCles($conn);
 $etablissements = $graphsController->getRegions($conn);
-?>
+$ratioLangues = $graphsController->getRatioLangues($conn);
+// echo "<pre>";
+// foreach ($ratioLangues as $key => $value) {
+//     var_dump($value);
+// }
+// echo "</pre>";
+// ?>
 <style>
 
 
@@ -98,6 +104,7 @@ $etablissements = $graphsController->getRegions($conn);
     <section class="graph" id="sec_enligne-cumul-annees"></section>
     <section class="graph" id="sec_nuage-mots_cles"></section>
     <section class="map" id="sec_map_France"></section>
+    <section class="graph" id="sec_langues"></section>
 </article>
 </details>
 
@@ -386,3 +393,46 @@ $etablissements = $graphsController->getRegions($conn);
 })();
 
     </script>
+<script>
+    Highcharts.chart("sec_langues", {
+        chart: {
+            type: "pie"
+        },
+        exporting: {
+            enabled: true
+        },
+        title: {
+            text: "Langues des thèses"
+        },
+        tooltip: {
+            pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>"
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: "pointer",
+                dataLabels: {
+                    enabled: true,
+                    format: "<b>{point.name}</b>: {point.percentage:.1f} %",
+                    style: {
+                        color:
+                            (Highcharts.theme &&
+                                Highcharts.theme.contrastTextColor) ||
+                            "black"
+                    }
+                }
+            }
+        },
+        series: [{
+            name: "Langues",
+            colorByPoint: true,
+            data: [
+                <?php
+                foreach ($ratioLangues as $value) {
+                    echo "{name: '" . $value["id"] . "', y: " . $value["compte"] . "},";
+                }
+                ?>
+            ]
+        }]
+    });
+</script>

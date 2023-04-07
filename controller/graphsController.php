@@ -207,4 +207,55 @@ GROUP BY
 
 
     }
+
+    function getRatioLangues(PDO $conn)
+    {
+        if(!$this->fromSearch){
+            $sql = "
+            SELECT 
+                COUNT(*) AS compte,
+                CASE
+                    WHEN langue = 'fr' THEN 'Francais'
+                    WHEN langue = 'en' THEN 'Anglais'
+                    ELSE langue
+                END AS id
+            FROM
+                these
+            GROUP BY
+                id;
+            ";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $listeNNT  = array();
+            foreach ($this->searchResults as $these) {
+                $listeNNT[] = $these->getNNT();
+            }
+            $listeNNT = implode("','", $listeNNT);
+            $sql = "
+            SELECT 
+                COUNT(*) AS compte,
+                CASE
+                    WHEN langue = 'fr' THEN 'fr'
+                    WHEN langue = 'en' THEN 'en'
+                    ELSE langue
+                END AS id
+            FROM
+                these
+            WHERE
+                nnt IN ('$listeNNT')
+            GROUP BY
+                id;
+            ";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        }
+        return $result;
+
+    }
+
+
 }
