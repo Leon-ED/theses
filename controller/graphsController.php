@@ -320,6 +320,49 @@ ORDER BY MONTH(dateSoutenance) ASC
         }
         return $result;
     }
+    function getDisciplines(PDO $conn)
+    {
+        if(!$this->fromSearch){
+            $sql = "
+            SELECT
+                discipline,
+                COUNT(*) AS compte
+            FROM
+                these
+            GROUP BY
+                discipline
+            ORDER BY compte DESC
+            LIMIT 20;
+            ";
 
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $listeNNT  = array();
+            foreach ($this->searchResults as $these) {
+                $listeNNT[] = $these->getNNT();
+            }
+            $listeNNT = implode("','", $listeNNT);
+            $sql = "
+            SELECT
+                discipline,
+                COUNT(*) AS compte
+            FROM
+                these
+            WHERE
+                nnt IN ('$listeNNT')
+            GROUP BY
+                discipline
+            ORDER BY compte DESC
+            LIMIT 100;
+            ";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+        return $result;
+}
 
 }

@@ -10,6 +10,7 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
 $etablissements = $graphsController->getRegions($conn);
 $ratioLangues = $graphsController->getRatioLangues($conn);
 $soutenanceMois = $graphsController->soutenancesParMois($conn);
+$disciplines = $graphsController->getDisciplines($conn);
 echo "<pre>";
     // var_dump($soutenanceMois);
 echo "</pre>";
@@ -105,6 +106,7 @@ echo "</pre>";
     <section class="map" id="sec_map_France"></section>
     <section class="graph" id="sec_langues"></section>
     <section class="graph" id="sec_mois"></section>
+    <section class="graph" id="sec_disciplines"></section>
 
 </article>
 </details>
@@ -499,4 +501,64 @@ echo "</pre>";
     });
 
 
+</script>
+<script>
+    //3d pie chart
+    Highcharts.chart("sec_disciplines", {
+        chart: {
+            type: "pie",
+            options3d: {
+            enabled: true,
+            alpha: 45
+            }
+        },
+        exporting: {
+            enabled: true
+        },
+        title: {
+            text: "Disciplines des thèses"
+        },
+        tooltip: {
+            headerFormat: "<span style='font-size:10px'>{point.key}</span><table>",
+            pointFormat:
+                "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
+                "<td style='padding:0'><b>{point.y:.1f} thèses</b></td></tr>",
+            footerFormat: "</table>",
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            pie: {
+            innerSize: 100,
+            depth: 45
+        }
+        },
+        ing: {
+            buttons: {
+                contextButton: {
+                    menuItems: [
+                        "downloadPNG",
+                        "downloadJPEG",
+                        "downloadPDF",
+                        "downloadSVG",
+                        "separator",
+                        "downloadCSV",
+                        "downloadXLS",
+                        "viewData",
+                        "openInCloud"
+                    ]
+                }
+            }
+        },
+        series: [{
+            name: "Thèses ",
+            data: [
+                <?php
+                foreach ($disciplines as $liste) {
+                    echo "{name: '" . addslashes($liste["discipline"]) . "', y: " . $liste["compte"] . "},";
+                }
+                ?>
+            ]
+        }]
+    });
 </script>
