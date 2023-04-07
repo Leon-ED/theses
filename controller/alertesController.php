@@ -1,5 +1,6 @@
 <?php
 require_once("../config/config.php");
+require_once("../script/functions.php");
 
 class AlertesController{
     private $emailsToSend = array();
@@ -15,6 +16,7 @@ class AlertesController{
 
     function deleteAlerte($id,$conn){
         global $conn;
+        global $password_mail;
         $sql = "DELETE FROM alertes WHERE id = :id AND idCompte = :idCompte";
         $stmt = $conn->prepare($sql);
         $stmt->execute(array(":id" => $id, ":idCompte" => $_SESSION['id']));
@@ -23,6 +25,9 @@ class AlertesController{
     function checkAlertes($conn){
         if(!isset($_SESSION['id'])){
             return;
+        }
+        if(!isset($password_mail)){
+            header("Location: ../account.php?error=2");
         }
 
         $idCompte = $_SESSION['id'];
@@ -63,27 +68,7 @@ class AlertesController{
     }
 
 
-    function sendEmail($email,$message){
-        $sujet = urlencode("Récapitulatif des alertes");
-        $url = "https://mail.gwadz.workers.dev/?to=%EMAIL%&subject=%SUJET%&token=ldywniudzkikugof&message=%MSG%";
 
-        $url = str_replace("%EMAIL%", $email, $url);
-        $url = str_replace("%SUJET%", $sujet, $url);
-        $url = str_replace("%MSG%", urlencode($message), $url);
-        $ch = curl_init();
-
-        // curl_setopt($ch, CURLOPT_POST, 1);
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
-    
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        echo $output; 
-
-
-
-    }
 
     function sendRecap($conn){
 
@@ -110,7 +95,7 @@ class AlertesController{
 
             
         }
-        $this->sendEmail($email,$message);
+        sendEmail($email,$message,"Récapitulatif de vos alertes");
     }
 
 }
