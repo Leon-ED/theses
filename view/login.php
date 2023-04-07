@@ -15,7 +15,7 @@ require_once("./include/html.header.inc.php");
             <label for="password">Mot de passe</label>
             <input type="password" name="password" id="password" required>
         </div>
-        <input type="hidden" name="loginAction" value="loginAction">
+        <input type="hidden" name="action" value="login">
         </div>
         <div class="form-container">
             <input type="submit" value="Se connecter">

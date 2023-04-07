@@ -31,6 +31,12 @@ $liste_personnes = Personne::getListFromBase($conn); // Liste de toutes les pers
 $liste_sujets = Sujet::getListFromBase($conn); //Liste de tous les sujets
 $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
 //Tout importer dans la boucle principale est plus pratique mais plus lent ...
+$alertes = array();
+$alertes_sql = "SELECT * FROM alertes";
+$alertes_req = $conn->prepare($alertes_sql);
+$alertes_req->execute();
+$alertes = $alertes_req->fetchAll(PDO::FETCH_ASSOC);
+
 
 foreach ($data as $these) {
     try {
@@ -72,6 +78,7 @@ foreach ($data as $these) {
 
     // On insère la thèse dans la BDD et on récupère son internal ID.
     $theseOBJ->setTheseId($theseOBJ->insertThese($conn));
+
 
 
     // On boucle sur chaque Auteur de la thèse
@@ -201,3 +208,5 @@ foreach($etablissementsListe as $etablissement){
     $stmt->bindParam(':idRef', $etablissement->identifiant_idref);
     $stmt->execute();
 }
+
+function 

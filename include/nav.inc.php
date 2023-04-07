@@ -10,7 +10,7 @@ if (isset($file) && $file != "index.php") { // Si on est pas sur la page d'accue
             <div class="d-flex">
                 <?php
                 if (isset($_SESSION['id'])) {  // Si on est connecté on affiche la page du profil et de déconnexion
-                    echo '<a href="#" class="nav-link">Profil</a>';
+                    echo '<a href="./account.php"" class="nav-link">Profil</a>';
                     echo '<a href="./logout.php" class="nav-link">Deconnexion</a>';
                 } else {
                     echo '<a href="./login.php" class="nav-link">Connexion</a>';
@@ -36,7 +36,7 @@ if (isset($file) && $file != "index.php") { // Si on est pas sur la page d'accue
             <div class="d-flex">
                 <?php
                 if (isset($_SESSION['id'])) { // Si on est connecté on affiche la page du profil et de déconnexion
-                    echo '<a href="#" class="nav-link">Profil</a>';
+                    echo '<a href="./account.php" class="nav-link">Profil</a>';
                     echo '<a href="./logout.php" class="nav-link">Deconnexion</a>';
                 } else {
                     echo '<a href="./login.php" class="nav-link">Connexion</a>';

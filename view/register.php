@@ -25,7 +25,7 @@ require_once("./include/html.header.inc.php");
         <label for="password">Confirmation du mot de passe</label>
         <input type="password" name="password_confirm" id="password_confirm" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{12,36}"></div>
     </div>
-    <input type="hidden" name="registerAction" value="registerAction">
+    <input type="hidden" name="action" value="register">
     <div class="form-container">
         <input type="submit" value="S'inscrire">
     </div>

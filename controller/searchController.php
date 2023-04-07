@@ -164,6 +164,10 @@ function getSearchResults(): array
         return getResultRandom();
     }
 
+    if(isset($_GET["nnt"])){
+        return getResultNNT();
+    }
+
     if (strlen($_GET["search"]) < -1) {
         $_SESSION["erreur_recherche"] = "La recherche doit contenir au moins 3 caractères, voici 10 thèses au hasard";
         //refresh current page
@@ -172,6 +176,9 @@ function getSearchResults(): array
 
     $recherche = "%$_GET[search]%";
     // On fait la recherche sur les titres, la discipline et le nnt
+    
+
+    
     $sql = "
     SELECT DISTINCT these.idThese, these.nnt, these.dateSoutenance, these.estAccessible
     FROM these
@@ -188,6 +195,7 @@ function getSearchResults(): array
     ORDER BY dateSoutenance DESC
     
     ";
+    
 
     // On exécute les requêtes
     $recherche_these = $conn->prepare($sql);
@@ -208,6 +216,23 @@ function getSearchResults(): array
     return $resultats;
 }
 
+
+function getResultNNT(){
+    global $conn;
+    $sql = "
+    SELECT  these.idThese, these.nnt, these.dateSoutenance, these.estAccessible
+    FROM these
+    WHERE these.nnt = :nnt
+    ORDER BY dateSoutenance DESC
+    ";
+    $recherche_these = $conn->prepare($sql);
+    $recherche_these->execute(array(
+        "nnt" => $_GET["nnt"],
+    ));
+    $recherche_these->execute();
+    $resultats = $recherche_these->fetchAll(PDO::FETCH_ASSOC);
+    return $resultats;
+}
 
 /**
  * Renvoie les statistiques liées à la recherche
