@@ -116,7 +116,8 @@ echo "</pre>";
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false,
-            type: 'pie'
+            type: 'pie',
+            
         },
         exporting: {
             enabled: true
@@ -441,7 +442,11 @@ echo "</pre>";
     // id:sec_mois , type: line
     Highcharts.chart("sec_mois", {
         chart: {
-            type: "pie"
+            type: "pie",
+            options3d: {
+            enabled: true,
+            alpha: 45
+            }
         },
         exporting: {
             enabled: true
@@ -459,10 +464,10 @@ echo "</pre>";
             useHTML: true
         },
         plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
+            pie: {
+            innerSize: 100,
+            depth: 45
+        }
         },
         ing: {
             buttons: {
