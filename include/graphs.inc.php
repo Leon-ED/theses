@@ -7,6 +7,7 @@ $disponibleAnnees = $ratioAccessibleAnnees["disponible"];
 $nonDisponibleAnnees = $ratioAccessibleAnnees["non_disponible"];
 $nombreCumulAnnees = $graphsController->getCumulThesesAnnees($conn, $listeAnnees);
 $sujetsCompte = $graphsController->getCompteMotsCles($conn);
+$etablissements = $graphsController->getRegions($conn);
 ?>
 <style>
 
@@ -96,6 +97,7 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
     <section class="graph" id="sec_enligne-annees"></section>
     <section class="graph" id="sec_enligne-cumul-annees"></section>
     <section class="graph" id="sec_nuage-mots_cles"></section>
+    <section class="map" id="sec_map_France"></section>
 </article>
 </details>
 
@@ -317,3 +319,70 @@ $sujetsCompte = $graphsController->getCompteMotsCles($conn);
     });
 
 </script>
+<script>
+(async () => {
+
+    const topology = await fetch(
+        'https://code.highcharts.com/mapdata/countries/fr/custom/fr-all-mainland.topo.json'
+    ).then(response => response.json());
+
+    // Prepare demo data. The data is joined to map using value of 'hc-key'
+    // property by default. See API docs for 'joinBy' for more info on linking
+    // data and map.
+    const data = [
+        <?php 
+            foreach($etablissements as $etablissement) {
+                if($etablissement["id"] == NULL)
+                    continue;
+                echo "['".$etablissement["id"]."', ".$etablissement["compte"]."]";
+                if ($etablissement != end($etablissements)) {
+                    echo ",";
+                }
+
+            }
+            ?>
+    ];
+
+    // Create the chart
+    Highcharts.mapChart('sec_map_France', {
+        chart: {
+            map: topology
+        },
+
+        title: {
+            text: 'Thèses par région'
+        },
+
+        subtitle: {
+            text: 'Source map: <a href="http://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json">France</a>'
+        },
+
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+
+        colorAxis: {
+            min: 0
+        },
+
+        series: [{
+            data: data,
+            name: 'Thèses :',
+            states: {
+                hover: {
+                    color: '#BADA55'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }]
+    });
+
+})();
+
+    </script>

@@ -1,5 +1,8 @@
 <?php
 use \JsonMachine\Items;
+
+use function PHPSTORM_META\map;
+
 //max exec time 20 minutes
 ini_set('max_execution_time', '0');
 set_time_limit(0);
@@ -14,7 +17,7 @@ spl_autoload_register(require '../libs/json-machine/src/autoloader.php');
 
     // $file = file_get_contents("../fichiers/extract_theses.json");
     // $data = json_decode($file, true);
-    $data = Items::fromFile('../fichiers/theses-soutenues.json'
+    $data = Items::fromFile('../fichiers/extract_theses.json'
 
 );
 } catch (Exception $e) {
@@ -29,7 +32,7 @@ $liste_sujets = Sujet::getListFromBase($conn); //Liste de tous les sujets
 $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
 //Tout importer dans la boucle principale est plus pratique mais plus lent ...
 
-
+goto e;
 foreach ($data as $these) {
     try {
     global $these;
@@ -149,6 +152,14 @@ foreach ($data as $these) {
         $sujetOBJ->insertSujet($conn, $theseOBJ->getNNT());
     }
 
+
+
+
+
+
+
+
+
 if (!DEBUG) {
     header("Location: ../");
 }
@@ -161,4 +172,33 @@ if (!DEBUG) {
 }
 
 }
+e:
+$i = 0;
+$etablissementsListe = Items::fromFile('../fichiers/etablissements.json');
+$req_setRegion = "UPDATE etablissement SET region = :region WHERE idRef = :idRef OR nom IN (:nom) ";
+foreach($etablissementsListe as $etablissement){
+    global $etablissement;
 
+
+
+    $stmt = $conn->prepare($req_setRegion);
+    $stmt->bindParam(':region', $etablissement->reg_nom);
+    // remove numbers from the end of the string
+    $nom = $etablissement->uo_lib;
+    $aca = $etablissement->aca_nom;
+    $ville = $etablissement->com_nom;
+    $liste = [$nom, $aca, $ville];
+    $listSQL = implode("','", $liste);
+    foreach($liste as $key => $value){
+        //remove numbers from the end of the string
+        $liste[$key] =  preg_replace('/\d+/', '', $value);
+    }
+    $stmt->bindParam(':nom', $listSQL);
+    
+
+
+
+
+    $stmt->bindParam(':idRef', $etablissement->identifiant_idref);
+    $stmt->execute();
+}

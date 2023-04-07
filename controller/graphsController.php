@@ -15,7 +15,6 @@ class GraphsController
         if ($fromSearch) {
             $this->nombreTheses = count($searchResults);
         }
-
     }
 
     function getNombreTheses(PDO $conn)
@@ -41,7 +40,6 @@ class GraphsController
             $disponible = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["disponible"];
 
             $non_disponible = $this->getNombreTheses($conn) - $disponible;
-
         } else {
             foreach ($this->searchResults as $these) {
                 if ($these->estAccessible()) {
@@ -76,12 +74,11 @@ class GraphsController
             $stmt->execute();
             $resultats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            foreach($resultats as $resultat){
+            foreach ($resultats as $resultat) {
                 $listeDisponible[] = $resultat["nb_theses_disponibles"];
                 $listeNonDisponible[] = $resultat["nb_theses_non_disponibles"];
             }
-
-        }else{
+        } else {
             foreach ($listeAnnees as $annee) {
 
                 $disponible = 0;
@@ -108,7 +105,7 @@ class GraphsController
     {
         $total = 0;
         $listeTotal = array();
-        if(!$this->fromSearch){
+        if (!$this->fromSearch) {
             $sql = "SELECT COUNT(*) AS nombre_theses
             FROM these
             GROUP BY YEAR(dateSoutenance)
@@ -117,23 +114,22 @@ class GraphsController
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $resultats = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            array_map(function($resultat) use (&$total, &$listeTotal){
+            array_map(function ($resultat) use (&$total, &$listeTotal) {
                 $total += $resultat["nombre_theses"];
                 $listeTotal[] = $total;
             }, $resultats);
-            
-    }else{
-        foreach ($listeAnnees as $annee) {
-            $total_annee = 0;
-            foreach ($this->searchResults as $these) {
-                if ($these->getDateSoutenance("Y") == $annee) {
-                    $total_annee++;
+        } else {
+            foreach ($listeAnnees as $annee) {
+                $total_annee = 0;
+                foreach ($this->searchResults as $these) {
+                    if ($these->getDateSoutenance("Y") == $annee) {
+                        $total_annee++;
+                    }
                 }
+                $total += $total_annee;
+                $listeTotal[] = $total;
             }
-            $total += $total_annee;
-            $listeTotal[] = $total;
         }
-    }
         return $listeTotal;
     }
 
@@ -157,12 +153,12 @@ class GraphsController
 
     function getCompteMotsCles(PDO $conn)
     {
-        if(!$this->fromSearch){
+        if (!$this->fromSearch) {
             $sql = "SELECT mot, COUNT(ts.idMot) as nb FROM these_sujet as ts,sujets WHERE ts.idMot = sujets.idMot GROUP BY ts.idMot ORDER BY nb DESC LIMIT 100";
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }else{
+        } else {
             $listeNNT  = array();
             foreach ($this->searchResults as $these) {
                 $listeNNT[] = $these->getNNT();
@@ -172,12 +168,43 @@ class GraphsController
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-
         }
 
         return $result;
+    }
 
-            
+    function getRegions(PDO $conn)
+    {
+        $sql = "
+        SELECT
+    CASE
+        WHEN e.region = 'Auvergne-Rhône-Alpes' THEN 'fr-ara'
+        WHEN e.region = 'Bourgogne-Franche-Comté' THEN 'fr-bfc'
+        WHEN e.region = 'Bretagne' THEN 'fr-bre'
+        WHEN e.region = 'Centre-Val de Loire' THEN 'fr-cvl'
+        WHEN e.region = 'Corse' THEN 'fr-cor'
+        WHEN e.region = 'Grand Est' THEN 'fr-ges'
+        WHEN e.region = 'Hauts-de-France' THEN 'fr-hdf'
+        WHEN e.region = 'Île-de-France' THEN 'fr-idf'
+        WHEN e.region = 'Normandie' THEN 'fr-nor'
+        WHEN e.region = 'Nouvelle-Aquitaine' THEN 'fr-naq'
+        WHEN e.region = 'Occitanie' THEN 'fr-occ'
+        WHEN e.region = 'Pays de la Loire' THEN 'fr-pdl'
+        WHEN e.region = 'Provence-Alpes-Côte d\'Azur' THEN 'fr-pac'
+    END AS id,
+    COUNT(*) AS compte
+FROM
+    these_etablissement te
+    JOIN etablissement e ON te.id_etablissement = e.id
+GROUP BY
+    e.region;
+";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+
+
     }
 }
