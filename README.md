@@ -10,6 +10,14 @@ Fonctionnalités : <br>
 - Dashboard qui affiche le nombre de thèses, auteur,directeur et établissement au total ou selon la recherche<br>
 - Bouton "J'ai de la chance" qui affiche 10 thèses aléatoires (possibilité de changer le nombre dans la barre URL (max 100 thèses))<br>
 - Design Responsive
+- NOUVEAU :
+- Possibilité de créer un compte
+- Possibilité de se connecter
+- Possibilité de modifier son profil
+- Possibilité de supprimer son compte
+- Possibilité d'ajouter, supprimer, voir ses alertes
+- Possibilité d'envoyer les thèses selon nos alertes par mail
+- Graphiques généraux ET selon la recherche
 
 <br>
 Pour utiliser le projet :
