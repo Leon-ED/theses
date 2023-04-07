@@ -177,21 +177,33 @@ a {
     font-weight: bold;
     margin-bottom: 10px;
 }
-.auth-form{
+.authForm{
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
     align-items: center;
     justify-content: center;
 }
 
-.auth-form input{
+.authForm input{
     width: 250px;
     height: 30px;
     border-radius: 5px;
     border: 1px solid #ccc;
     padding: 5px;
 
+}
+.authForm input[type="submit"]{
+    width: fit-content;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    background-color: #0d6efd;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 
@@ -222,6 +234,21 @@ footer{
     margin-top: 10em;
     text-align: center;
     color: gray;
+}
+
+.authForm{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+.form-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
 }
 
 

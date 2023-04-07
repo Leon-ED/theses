@@ -32,7 +32,6 @@ $liste_sujets = Sujet::getListFromBase($conn); //Liste de tous les sujets
 $liste_NNT = These::getAllNNT($conn); // Liste de tous les NNT
 //Tout importer dans la boucle principale est plus pratique mais plus lent ...
 
-goto e;
 foreach ($data as $these) {
     try {
     global $these;
