@@ -21,6 +21,9 @@ Fonctionnalités : <br>
 
 <br>
 Pour utiliser le projet :
+Faire : <code>git clone https://github.com/Leon-ED/theses</code><br>
+Puis : <code>cd theses</code><br>
+Puis : <code>git submodule update --init --recursive</code> Afin que le script d'import fonctionne<br>
 créer un fichier <code>credentials.php</code> ou utiliser le fichier template (à renommer) dans le dossier <code>config</code>
 comme ceci :<br>
 Script pour importer les données : <code>script/script_import.php</code>, fichier pour les thèses : <code>fichiers/extract_theses.json</code> <br>
@@ -30,6 +33,7 @@ $servername = "URL_SERVEUR";<br>
 $username = "NOM_UTILISATEUR";<br>
 $password = "MOT_DE_PASSE";<br>
 $dbname = "NOM_BASE_DE_DONNES";<br>
+$password_mail = "MOT_DE_PASSE_MAIL";<br>
 </code>
 <br>
 Testé en PHP 7.0.33 et 8.1.10
