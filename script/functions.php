@@ -62,3 +62,28 @@ function printIntArray($array){
 
 
 }
+
+function sendEmail($email,$message,$sujet){
+    global $password_mail;
+    $sujet = urlencode($sujet);
+    $email = urlencode($email);
+    $url = "https://mail.gwadz.workers.dev/?to=%EMAIL%&subject=%SUJET%&token=%TOKEN%&message=%MSG%";
+
+    $url = str_replace("%EMAIL%", $email, $url);
+    $url = str_replace("%SUJET%", $sujet, $url);
+    $url = str_replace("%TOKEN%",urlencode($password_mail), $url);
+    $url = str_replace("%MSG%", urlencode($message), $url);
+    $ch = curl_init();
+
+    // curl_setopt($ch, CURLOPT_POST, 1);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $output = curl_exec($ch);
+    curl_close($ch);
+    echo $output; 
+
+
+
+}

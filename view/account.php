@@ -3,6 +3,10 @@ $file = "index.php";
 require_once("./config/config.php");
 require_once("./include/html.header.inc.php");
 require("./include/alertes.inc.php");
+$sql = "SELECT * FROM compte WHERE id = :id";
+$req = $conn->prepare($sql);
+$req->execute(array(":id" => $_SESSION['id']));
+$result = $req->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -10,6 +14,11 @@ require("./include/alertes.inc.php");
     <?php require_once("./include/nav.inc.php") ?>
     <main class="p-5">
         <h1>Mon compte</h1>
+        <p>
+            Bienvenue sur votre compte, <?php echo $result['login'] ?><br>
+            Votre email : <?php echo $result['email'] ?><br>
+            Votre login : <?php echo $result['login'] ?>
+        </p>
         <hr>
         <details>
             <summary>
@@ -99,6 +108,11 @@ require("./include/alertes.inc.php");
         <details>
             <summary>
                 <h2>Gérer mes alertes</h2>
+                <?php
+                if(isset($_GET["error"]) && $_GET["error"] == 2){
+                    echo "<p style='color:red'>Les alertes par email ne sont pas disponibles.</p>";
+                }
+                ?>
                 <hr>
             </summary>
             <h3>Ajouter une alerte</h3>
