@@ -9,11 +9,10 @@ $nombreCumulAnnees = $graphsController->getCumulThesesAnnees($conn, $listeAnnees
 $sujetsCompte = $graphsController->getCompteMotsCles($conn);
 $etablissements = $graphsController->getRegions($conn);
 $ratioLangues = $graphsController->getRatioLangues($conn);
-// echo "<pre>";
-// foreach ($ratioLangues as $key => $value) {
-//     var_dump($value);
-// }
-// echo "</pre>";
+$soutenanceMois = $graphsController->soutenancesParMois($conn);
+echo "<pre>";
+    // var_dump($soutenanceMois);
+echo "</pre>";
 // ?>
 <style>
 
@@ -105,6 +104,8 @@ $ratioLangues = $graphsController->getRatioLangues($conn);
     <section class="graph" id="sec_nuage-mots_cles"></section>
     <section class="map" id="sec_map_France"></section>
     <section class="graph" id="sec_langues"></section>
+    <section class="graph" id="sec_mois"></section>
+
 </article>
 </details>
 
@@ -435,4 +436,62 @@ $ratioLangues = $graphsController->getRatioLangues($conn);
             ]
         }]
     });
+</script>
+<script>
+    // id:sec_mois , type: line
+    Highcharts.chart("sec_mois", {
+        chart: {
+            type: "pie"
+        },
+        exporting: {
+            enabled: true
+        },
+        title: {
+            text: "Nombre de thèses par mois"
+        },
+        tooltip: {
+            headerFormat: "<span style='font-size:10px'>{point.key}</span><table>",
+            pointFormat:
+                "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
+                "<td style='padding:0'><b>{point.y:.1f} thèses</b></td></tr>",
+            footerFormat: "</table>",
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        ing: {
+            buttons: {
+                contextButton: {
+                    menuItems: [
+                        "downloadPNG",
+                        "downloadJPEG",
+                        "downloadPDF",
+                        "downloadSVG",
+                        "separator",
+                        "downloadCSV",
+                        "downloadXLS",
+                        "viewData",
+                        "openInCloud"
+                    ]
+                }
+            }
+        },
+        series: [{
+            name: "Thèses ",
+            data: [
+                <?php
+                foreach ($soutenanceMois as $liste) {
+                    echo "{name: '" . $liste["mois"] . "', y: " . $liste["compte"] . "},";
+                }
+                ?>
+            ]
+        }]
+    });
+
+
 </script>

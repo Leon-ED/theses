@@ -257,5 +257,69 @@ GROUP BY
 
     }
 
+    function soutenancesParMois($conn){
+        if(!$this->fromSearch){
+            $sql = "
+                SELECT 
+        CASE MONTH(dateSoutenance)
+            WHEN 1 THEN 'Janvier'
+            WHEN 2 THEN 'Février'
+            WHEN 3 THEN 'Mars'
+            WHEN 4 THEN 'Avril'
+            WHEN 5 THEN 'Mai'
+            WHEN 6 THEN 'Juin'
+            WHEN 7 THEN 'Juillet'
+            WHEN 8 THEN 'Août'
+            WHEN 9 THEN 'Septembre'
+            WHEN 10 THEN 'Octobre'
+            WHEN 11 THEN 'Novembre'
+            WHEN 12 THEN 'Décembre'
+        END AS mois,
+        COUNT(*) AS compte
+    FROM these
+    GROUP BY mois
+    ORDER BY MONTH(dateSoutenance) ASC
+    ;
+            ";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $listeNNT  = array();
+            foreach ($this->searchResults as $these) {
+                $listeNNT[] = $these->getNNT();
+            }
+            $listeNNT = implode("','", $listeNNT);
+            $sql = "
+            SELECT 
+    CASE MONTH(dateSoutenance)
+        WHEN 1 THEN 'Janvier'
+        WHEN 2 THEN 'Février'
+        WHEN 3 THEN 'Mars'
+        WHEN 4 THEN 'Avril'
+        WHEN 5 THEN 'Mai'
+        WHEN 6 THEN 'Juin'
+        WHEN 7 THEN 'Juillet'
+        WHEN 8 THEN 'Août'
+        WHEN 9 THEN 'Septembre'
+        WHEN 10 THEN 'Octobre'
+        WHEN 11 THEN 'Novembre'
+        WHEN 12 THEN 'Décembre'
+    END AS mois,
+    COUNT(*) AS compte
+FROM these
+WHERE nnt IN ('$listeNNT')
+GROUP BY mois
+ORDER BY MONTH(dateSoutenance) ASC
+
+;
+            ";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        return $result;
+    }
+
 
 }
