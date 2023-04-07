@@ -9,7 +9,6 @@ $graphsController = new GraphsController();
 
 <body>
     <?php require_once("./include/nav.inc.php") ?>
-
     <h1 class="text-center" style="margin-top:1%;">Recherche des thèses françaises</h1>
     <div class="container">
         <div class="row">
@@ -25,7 +24,8 @@ $graphsController = new GraphsController();
 </body>
 <?= $bootstrap_alert ?>
 
-<?php  require_once("./include/dashboard.inc.php"); ?>
+<?php require_once("./include/dashboard.inc.php"); ?>
 <?php require_once("./include/graphs.inc.php"); ?>
 <?php require_once("./include/footer.inc.php"); ?>
+
 </html>

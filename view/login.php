@@ -2,7 +2,7 @@
 require_once("./config/config.php");
 require_once("./include/html.header.inc.php");
 $erreur = "";
-if(isset($_GET['error'])){
+if (isset($_GET['error'])) {
     $erreur = "Les identifiants sont incorrects ou le compte n'existe pas";
 }
 ?>
@@ -10,7 +10,7 @@ if(isset($_GET['error'])){
 <body>
     <?php require_once("./include/nav.inc.php") ?>
     <h1 class="text-center" style="margin-top:1%;">Se connecter</h1>
-    <p class="text-center" style="margin-top:1%;"><?php echo $erreur?></p>
+    <p class="text-center" style="margin-top:1%;"><?php echo $erreur ?></p>
     <form action="controller/authController.php" method="POST" class="authForm">
         <div class="form-container">
             <label for="login">Nom d'utilisateur</label>

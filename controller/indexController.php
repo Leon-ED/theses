@@ -1,4 +1,5 @@
 <?php
+
 /**
  * S'occupe de gérer l'affichage de la page view/index.php
  */
@@ -39,7 +40,7 @@ function getStatsTheses(): array
     $sth = $conn->prepare($sql);
     $sth->execute();
     $stats["nombre_theses"] = $sth->fetch()["nombre_theses"];
-    
+
     // Nombre d'établissements
     $sql = "SELECT COUNT(*) AS nombre_etablissements FROM etablissement";
     $sth = $conn->prepare($sql);

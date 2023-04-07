@@ -12,12 +12,11 @@ $ratioLangues = $graphsController->getRatioLangues($conn);
 $soutenanceMois = $graphsController->soutenancesParMois($conn);
 $disciplines = $graphsController->getDisciplines($conn);
 echo "<pre>";
-    // var_dump($soutenanceMois);
+// var_dump($soutenanceMois);
 echo "</pre>";
-// ?>
+// 
+?>
 <style>
-
-
     #graphs-container {
         margin-left: 2rem;
         margin-right: 2rem;
@@ -27,6 +26,7 @@ echo "</pre>";
         grid-template-rows: 1fr 1fr;
         grid-gap: 10px;
     }
+
     /* on each line put 2 graph */
     #graphs-container>section:nth-child(2n+1) {
         grid-column: 1/2;
@@ -71,6 +71,7 @@ echo "</pre>";
             margin: 2px;
 
         }
+
         #graphs-container>section:nth-child(2n+1) {
             grid-column: 1/2;
             grid-row: 1/2;
@@ -91,24 +92,22 @@ echo "</pre>";
             grid-row: 4/5;
         }
     }
-        
-    
-
-
 </style>
-<details <?php if(isset($file) && $file === "index.php") echo "open"; ?>>
-    <summary><h3 class="search-result-h">Graphiques</h3></summary>
-<article id="graphs-container">
-    <section class="graph" id="sec_camembert"></section>
-    <section class="graph" id="sec_enligne-annees"></section>
-    <section class="graph" id="sec_enligne-cumul-annees"></section>
-    <section class="graph" id="sec_nuage-mots_cles"></section>
-    <section class="map" id="sec_map_France"></section>
-    <section class="graph" id="sec_langues"></section>
-    <section class="graph" id="sec_mois"></section>
-    <section class="graph" id="sec_disciplines"></section>
+<details <?php if (isset($file) && $file === "index.php") echo "open"; ?>>
+    <summary>
+        <h3 class="search-result-h">Graphiques</h3>
+    </summary>
+    <article id="graphs-container">
+        <section class="graph" id="sec_camembert"></section>
+        <section class="graph" id="sec_enligne-annees"></section>
+        <section class="graph" id="sec_enligne-cumul-annees"></section>
+        <section class="graph" id="sec_nuage-mots_cles"></section>
+        <section class="map" id="sec_map_France"></section>
+        <section class="graph" id="sec_langues"></section>
+        <section class="graph" id="sec_mois"></section>
+        <section class="graph" id="sec_disciplines"></section>
 
-</article>
+    </article>
 </details>
 
 
@@ -119,7 +118,7 @@ echo "</pre>";
             plotBorderWidth: null,
             plotShadow: false,
             type: 'pie',
-            
+
         },
         exporting: {
             enabled: true
@@ -275,16 +274,15 @@ echo "</pre>";
             }
         },
         series: [{
-                name: 'Thèses ',
-                data: [<?php printIntArray($nombreCumulAnnees); ?>]
+            name: 'Thèses ',
+            data: [<?php printIntArray($nombreCumulAnnees); ?>]
 
-            }
-        ]
+        }]
     });
 </script>
 
 <script defer>
-// chart word cloud 
+    // chart word cloud 
 
     Highcharts.chart('sec_nuage-mots_cles', {
         chart: {
@@ -311,10 +309,9 @@ echo "</pre>";
                     // cut the string to 15 characters and add '...' if it is longer
                     $mot["mot"] = substr($mot["mot"], 0, 15) . (strlen($mot["mot"]) > 15 ? '...' : '');
                     echo '{
-                        name : "'.addslashes($mot["mot"]) .'",
-                        weight : "'.$mot["nb"].'"
+                        name : "' . addslashes($mot["mot"]) . '",
+                        weight : "' . $mot["nb"] . '"
                     },';
-
                 }
                 ?>
             ],
@@ -328,75 +325,72 @@ echo "</pre>";
             }
         },
     });
-
 </script>
 <script>
-(async () => {
+    (async () => {
 
-    const topology = await fetch(
-        'https://code.highcharts.com/mapdata/countries/fr/custom/fr-all-mainland.topo.json'
-    ).then(response => response.json());
+        const topology = await fetch(
+            'https://code.highcharts.com/mapdata/countries/fr/custom/fr-all-mainland.topo.json'
+        ).then(response => response.json());
 
-    // Prepare demo data. The data is joined to map using value of 'hc-key'
-    // property by default. See API docs for 'joinBy' for more info on linking
-    // data and map.
-    const data = [
-        <?php 
-            foreach($etablissements as $etablissement) {
-                if($etablissement["id"] == NULL)
+        // Prepare demo data. The data is joined to map using value of 'hc-key'
+        // property by default. See API docs for 'joinBy' for more info on linking
+        // data and map.
+        const data = [
+            <?php
+            foreach ($etablissements as $etablissement) {
+                if ($etablissement["id"] == NULL)
                     continue;
-                echo "['".$etablissement["id"]."', ".$etablissement["compte"]."]";
+                echo "['" . $etablissement["id"] . "', " . $etablissement["compte"] . "]";
                 if ($etablissement != end($etablissements)) {
                     echo ",";
                 }
-
             }
             ?>
-    ];
+        ];
 
-    // Create the chart
-    Highcharts.mapChart('sec_map_France', {
-        chart: {
-            map: topology
-        },
+        // Create the chart
+        Highcharts.mapChart('sec_map_France', {
+            chart: {
+                map: topology
+            },
 
-        title: {
-            text: 'Thèses par région'
-        },
+            title: {
+                text: 'Thèses par région'
+            },
 
-        subtitle: {
-            text: 'Source map: <a href="http://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json">France</a>'
-        },
+            subtitle: {
+                text: 'Source map: <a href="http://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json">France</a>'
+            },
 
-        mapNavigation: {
-            enabled: true,
-            buttonOptions: {
-                verticalAlign: 'bottom'
-            }
-        },
-
-        colorAxis: {
-            min: 0
-        },
-
-        series: [{
-            data: data,
-            name: 'Thèses :',
-            states: {
-                hover: {
-                    color: '#BADA55'
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
                 }
             },
-            dataLabels: {
-                enabled: true,
-                format: '{point.name}'
-            }
-        }]
-    });
 
-})();
+            colorAxis: {
+                min: 0
+            },
 
-    </script>
+            series: [{
+                data: data,
+                name: 'Thèses :',
+                states: {
+                    hover: {
+                        color: '#BADA55'
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }]
+        });
+
+    })();
+</script>
 <script>
     Highcharts.chart("sec_langues", {
         chart: {
@@ -419,8 +413,7 @@ echo "</pre>";
                     enabled: true,
                     format: "<b>{point.name}</b>: {point.percentage:.1f} %",
                     style: {
-                        color:
-                            (Highcharts.theme &&
+                        color: (Highcharts.theme &&
                                 Highcharts.theme.contrastTextColor) ||
                             "black"
                     }
@@ -446,8 +439,8 @@ echo "</pre>";
         chart: {
             type: "pie",
             options3d: {
-            enabled: true,
-            alpha: 45
+                enabled: true,
+                alpha: 45
             }
         },
         exporting: {
@@ -458,8 +451,7 @@ echo "</pre>";
         },
         tooltip: {
             headerFormat: "<span style='font-size:10px'>{point.key}</span><table>",
-            pointFormat:
-                "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
+            pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
                 "<td style='padding:0'><b>{point.y:.1f} thèses</b></td></tr>",
             footerFormat: "</table>",
             shared: true,
@@ -467,9 +459,9 @@ echo "</pre>";
         },
         plotOptions: {
             pie: {
-            innerSize: 100,
-            depth: 45
-        }
+                innerSize: 100,
+                depth: 45
+            }
         },
         ing: {
             buttons: {
@@ -499,8 +491,6 @@ echo "</pre>";
             ]
         }]
     });
-
-
 </script>
 <script>
     //3d pie chart
@@ -508,8 +498,8 @@ echo "</pre>";
         chart: {
             type: "pie",
             options3d: {
-            enabled: true,
-            alpha: 45
+                enabled: true,
+                alpha: 45
             }
         },
         exporting: {
@@ -520,8 +510,7 @@ echo "</pre>";
         },
         tooltip: {
             headerFormat: "<span style='font-size:10px'>{point.key}</span><table>",
-            pointFormat:
-                "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
+            pointFormat: "<tr><td style='color:{series.color};padding:0'>{series.name}: </td>" +
                 "<td style='padding:0'><b>{point.y:.1f} thèses</b></td></tr>",
             footerFormat: "</table>",
             shared: true,
@@ -529,9 +518,9 @@ echo "</pre>";
         },
         plotOptions: {
             pie: {
-            innerSize: 100,
-            depth: 45
-        }
+                innerSize: 100,
+                depth: 45
+            }
         },
         ing: {
             buttons: {

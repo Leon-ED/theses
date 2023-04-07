@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Fonctions générales pour l'application PHP
  *
@@ -42,28 +43,28 @@ function implodeToSQL($array)
 }
 
 
-function clean(array $param){
+function clean(array $param)
+{
     foreach ($param as $key => $value) {
         $param[$key] = htmlspecialchars($value);
     }
     return $param;
 }
 
-function printIntArray($array){
+function printIntArray($array)
+{
     $i = 0;
     $len = count($array);
     foreach ($array as $value) {
-        if($i == $len - 1)
+        if ($i == $len - 1)
             echo $value;
         else
             echo $value . ", ";
-
     }
-
-
 }
 
-function sendEmail($email,$message,$sujet){
+function sendEmail($email, $message, $sujet)
+{
     global $password_mail;
     $sujet = urlencode($sujet);
     $email = urlencode($email);
@@ -71,7 +72,7 @@ function sendEmail($email,$message,$sujet){
 
     $url = str_replace("%EMAIL%", $email, $url);
     $url = str_replace("%SUJET%", $sujet, $url);
-    $url = str_replace("%TOKEN%",urlencode($password_mail), $url);
+    $url = str_replace("%TOKEN%", urlencode($password_mail), $url);
     $url = str_replace("%MSG%", urlencode($message), $url);
     $ch = curl_init();
 
@@ -82,8 +83,5 @@ function sendEmail($email,$message,$sujet){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $output = curl_exec($ch);
     curl_close($ch);
-    echo $output; 
-
-
-
+    echo $output;
 }

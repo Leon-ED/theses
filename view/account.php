@@ -109,7 +109,7 @@ $result = $req->fetch(PDO::FETCH_ASSOC);
             <summary>
                 <h2>Gérer mes alertes</h2>
                 <?php
-                if(isset($_GET["error"]) && $_GET["error"] == 2){
+                if (isset($_GET["error"]) && $_GET["error"] == 2) {
                     echo "<p style='color:red'>Les alertes par email ne sont pas disponibles.</p>";
                 }
                 ?>

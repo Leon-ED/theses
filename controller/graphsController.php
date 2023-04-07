@@ -204,13 +204,11 @@ GROUP BY
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
-
-
     }
 
     function getRatioLangues(PDO $conn)
     {
-        if(!$this->fromSearch){
+        if (!$this->fromSearch) {
             $sql = "
             SELECT 
                 COUNT(*) AS compte,
@@ -251,14 +249,13 @@ GROUP BY
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         }
         return $result;
-
     }
 
-    function soutenancesParMois($conn){
-        if(!$this->fromSearch){
+    function soutenancesParMois($conn)
+    {
+        if (!$this->fromSearch) {
             $sql = "
                 SELECT 
         CASE MONTH(dateSoutenance)
@@ -322,7 +319,7 @@ ORDER BY MONTH(dateSoutenance) ASC
     }
     function getDisciplines(PDO $conn)
     {
-        if(!$this->fromSearch){
+        if (!$this->fromSearch) {
             $sql = "
             SELECT
                 discipline,
@@ -361,8 +358,7 @@ ORDER BY MONTH(dateSoutenance) ASC
             $stmt = $conn->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+        }
         return $result;
-}
-
+    }
 }

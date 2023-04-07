@@ -7,7 +7,4 @@
         <p>Source des données : <a href="https://www.data.gouv.fr/fr/datasets/theses-soutenues-en-france-depuis-1985/">data.gouv.fr</a></p>
         <p>Code source : <a href="https://github.com/Leon-ED/but-projet-thesefr">Github</a> </p>
     </div>
-
-
-
 </footer>

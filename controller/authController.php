@@ -90,7 +90,7 @@ class AuthController
         $req = $conn->prepare($sql);
         $req->execute(array(":id" => $_SESSION['id']));
         $result = $req->fetch(PDO::FETCH_ASSOC);
-        if(!$result || !password_verify($old_password, $result['password'])){
+        if (!$result || !password_verify($old_password, $result['password'])) {
             return false;
         }
         $new_password_hashed = password_hash($new_password, PASSWORD_DEFAULT);
@@ -111,7 +111,7 @@ class AuthController
         $req = $conn->prepare($sql);
         $req->execute(array(":id" => $_SESSION['id']));
         $result = $req->fetch(PDO::FETCH_ASSOC);
-        if(!$result || !password_verify($old_password, $result['password'])){
+        if (!$result || !password_verify($old_password, $result['password'])) {
             return false;
         }
         $sql = "UPDATE compte SET email = :email WHERE id = :id";
@@ -120,7 +120,7 @@ class AuthController
         return true;
     }
 
-    function newLogin (PDO $conn)
+    function newLogin(PDO $conn)
     {
         $new_login = $_POST['new_login'];
         $new_login_confirm = $_POST['login_confirm'];
@@ -132,7 +132,7 @@ class AuthController
         $req = $conn->prepare($sql);
         $req->execute(array(":id" => $_SESSION['id']));
         $result = $req->fetch(PDO::FETCH_ASSOC);
-        if(!$result || !password_verify($old_password, $result['password'])){
+        if (!$result || !password_verify($old_password, $result['password'])) {
             return false;
         }
         $sql = "UPDATE compte SET login = :login WHERE id = :id";
@@ -150,7 +150,7 @@ class AuthController
         $result = $req->fetch(PDO::FETCH_ASSOC);
         // echo $password;
 
-        if(!$result || !password_verify($password, $result['password'])){
+        if (!$result || !password_verify($password, $result['password'])) {
             return false;
         }
         $sql = "DELETE FROM alertes WHERE idCompte = :id; DELETE FROM compte WHERE id = :id";
@@ -158,12 +158,11 @@ class AuthController
         $req->execute(array(":id" => $_SESSION['id']));
         return true;
     }
-
 }
 $authController = new AuthController();
 
 $_POST = clean($_POST);
-switch($_POST["action"]):
+switch ($_POST["action"]):
     case "register":
         $result = $authController->registerUser($conn);
         $page = $result ? "login.php" : "register.php?error=1";
@@ -189,6 +188,6 @@ switch($_POST["action"]):
         require_once "../logout.php";
         $page = $result ? "index.php" : "account.php?error=1";
         break;
-    
+
 endswitch;
 header("Location: ../$page");
