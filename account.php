@@ -1,7 +1,2 @@
-<?php 
-if(!isset($_SESSION['id'])) {
-    header("Location: ./login.php");
-    exit();
-}
-
+<?php
 require_once("./view/account.php");

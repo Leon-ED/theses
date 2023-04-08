@@ -7,7 +7,10 @@ $sql = "SELECT * FROM compte WHERE id = :id";
 $req = $conn->prepare($sql);
 $req->execute(array(":id" => $_SESSION['id']));
 $result = $req->fetch(PDO::FETCH_ASSOC);
-
+if(!isset($_SESSION['login'])) {
+    header("Location: ./login.php");
+    exit();
+}
 ?>
 
 <body>
