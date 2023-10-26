@@ -1,4 +1,4 @@
-# Projet Thèses
+# Projet Thèses, BUT 2 Informatique
 Les fichiers
 <code>credentials.php , .htpasswd et .htaccess </code>ne sont pas push sur le Git<br>
 URL : https://theses.edmeeleon.fr/<br>
