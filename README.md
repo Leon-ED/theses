@@ -1,4 +1,4 @@
-# Projet Thèses, BUT 2 Informatique
+# Projet Thèses, BUT 2 Informatique, IUT de Marne-la-Vallée (2023)
 Les fichiers
 <code>credentials.php , .htpasswd et .htaccess </code>ne sont pas push sur le Git<br>
 URL : https://theses.edmeeleon.fr/<br>
